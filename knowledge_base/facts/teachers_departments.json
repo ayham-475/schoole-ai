@@ -1,0 +1,128 @@
+{
+  "metadata": {
+    "version": "1.1",
+    "last_updated": "2026-08-29",
+    "description": "بيانات الأقسام الأكاديمية والمعلمين وساعاتهم المكتبية"
+  },
+  "departments": [
+    {
+      "department_id": "DEP_MATH",
+      "department_name": "قسم الرياضيات والعلوم الطبيعية",
+      "aliases": ["رياضيات", "علوم طبيعية", "علوم", "حساب", "فيزياء"],
+      "head_of_department_id": "T_101"
+    },
+    {
+      "department_id": "DEP_LANG",
+      "department_name": "قسم اللغات والعلوم الإنسانية",
+      "aliases": ["لغات", "لغة عربية", "عربي", "علوم إنسانية", "أدب"],
+      "head_of_department_id": "T_103"
+    },
+    {
+      "department_id": "DEP_CS",
+      "department_name": "قسم الحاسوب وتقنية المعلومات",
+      "aliases": ["حاسب", "كمبيوتر", "تقنية معلومات", "IT", "حاسب آلي", "برمجة"],
+      "head_of_department_id": "T_104"
+    }
+  ],
+  "teachers": [
+    {
+      "teacher_id": "T_101",
+      "title": "أ.",
+      "clean_name": "أحمد محمود العلي",
+      "full_name": "أ. أحمد محمود العلي",
+      "search_keywords": ["احمد العلي", "احمد محمود", "استاذ احمد"],
+      "department_id": "DEP_MATH",
+      "specialization": "الرياضيات البحتة والتطبيقية",
+      "subjects_taught": ["الرياضيات", "التفاضل والتكامل"],
+      "assigned_grades": ["GRADE_11", "GRADE_12"],
+      "contact": {
+        "email": "a.alali@school.edu"
+      },
+      "available_meeting_hours": [
+        {
+          "day": "Sunday",
+          "start_time": "10:15",
+          "end_time": "11:00",
+          "location_id": "LOC_OFFICE_204",
+          "location_name": "مكتب 204"
+        },
+        {
+          "day": "Tuesday",
+          "start_time": "11:20",
+          "end_time": "12:05",
+          "location_id": "LOC_OFFICE_204",
+          "location_name": "مكتب 204"
+        }
+      ]
+    },
+    {
+      "teacher_id": "T_102",
+      "title": "أ.",
+      "clean_name": "خالد عبد الرحمن السعيد",
+      "full_name": "أ. خالد عبد الرحمن السعيد",
+      "search_keywords": ["خالد السعيد", "استاذ خالد", "خالد عبدالرحمن"],
+      "department_id": "DEP_MATH",
+      "specialization": "الفيزياء المتقدمة",
+      "subjects_taught": ["الفيزياء", "الفيزياء التطبيقية"],
+      "assigned_grades": ["GRADE_10", "GRADE_12"],
+      "contact": {
+        "email": "k.alsaeed@school.edu"
+      },
+      "available_meeting_hours": [
+        {
+          "day": "Monday",
+          "start_time": "09:30",
+          "end_time": "10:15",
+          "location_id": "LOC_LAB_PHYSICS",
+          "location_name": "مختبر الفيزياء"
+        }
+      ]
+    },
+    {
+      "teacher_id": "T_103",
+      "title": "د.",
+      "clean_name": "سارة إبراهيم الشمري",
+      "full_name": "د. سارة إبراهيم الشمري",
+      "search_keywords": ["ساره الشمري", "دكتوره ساره", "سارة ابراهيم"],
+      "department_id": "DEP_LANG",
+      "specialization": "اللغة العربية والنحو",
+      "subjects_taught": ["اللغة العربية", "النحو والصرف", "الأدب"],
+      "assigned_grades": ["GRADE_10", "GRADE_11", "GRADE_12"],
+      "contact": {
+        "email": "s.alshammari@school.edu"
+      },
+      "available_meeting_hours": [
+        {
+          "day": "Wednesday",
+          "start_time": "11:20",
+          "end_time": "12:05",
+          "location_id": "LOC_OFFICE_102",
+          "location_name": "مكتب 102"
+        }
+      ]
+    },
+    {
+      "teacher_id": "T_104",
+      "title": "أ.",
+      "clean_name": "معاذ عبدالله",
+      "full_name": "أ. معاذ عبدالله",
+      "search_keywords": ["معاذ عبدالله", "استاذ معاذ", "معاذ"],
+      "department_id": "DEP_CS",
+      "specialization": "برمجة وذكاء اصطناعي",
+      "subjects_taught": ["الحاسب الآلي", "البرمجة", "الذكاء الاصطناعي"],
+      "assigned_grades": ["GRADE_11", "GRADE_12"],
+      "contact": {
+        "email": "m.abdullah@school.edu"
+      },
+      "available_meeting_hours": [
+        {
+          "day": "Thursday",
+          "start_time": "08:15",
+          "end_time": "09:00",
+          "location_id": "LOC_LAB_COMP_1",
+          "location_name": "معمل الحاسب 1"
+        }
+      ]
+    }
+  ]
+}

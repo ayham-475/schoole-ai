@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار نموذج المساعد المدرسي الذكي</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .chat-container {
+            width: 100%;
+            max-width: 600px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            height: 80vh;
+        }
+        .chat-header {
+            background: #007bff;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .chat-box {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: #fafafa;
+        }
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            line-height: 1.5;
+            font-size: 0.95rem;
+            word-wrap: break-word;
+        }
+        .user-message {
+            background: #007bff;
+            color: white;
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+        }
+        .bot-message {
+            background: #e9ecef;
+            color: #333;
+            align-self: flex-end;
+            border-bottom-right-radius: 0;
+        }
+        .meta-info {
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin-top: 5px;
+            display: block;
+        }
+        .chat-input-area {
+            display: flex;
+            padding: 15px;
+            background: #ffffff;
+            border-top: 1px solid #dee2e6;
+        }
+        .chat-input-area input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            outline: none;
+            font-size: 1rem;
+        }
+        .chat-input-area input:focus {
+            border-color: #007bff;
+        }
+        .chat-input-area button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 0 20px;
+            margin-right: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+        .chat-input-area button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <div class="chat-header">اختبار المساعد الذكي للمدرسة 🤖</div>
+        
+        <div id="chatBox" class="chat-box">
+            <div class="message bot-message">
+                أهلاً بك! أنا جاهز لتلقي أسئلتك حول الجداول، المعلمين، أو المواعيد المدرسية. جرب أن تسألني الآن.
+            </div>
+        </div>
+
+        <div class="chat-input-area">
+            <input type="text" id="queryInput" placeholder="اكتب سؤالك هنا (مثال: متى حصة الرياضيات؟)..." onkeypress="handleKeyPress(event)">
+            <button onclick="sendMessage()">إرسال</button>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "http://127.0.0.1:8000/api/chat/";
+
+        async function sendMessage() {
+            const inputField = document.getElementById("queryInput");
+            const chatBox = document.getElementById("chatBox");
+            const query = inputField.value.trim();
+
+            if (!query) return;
+
+            // 1. عرض رسالة المستخدم في الواجهة
+            const userMsgDiv = document.createElement("div");
+            userMsgDiv.className = "message user-message";
+            userMsgDiv.textContent = query;
+            chatBox.appendChild(userMsgDiv);
+
+            inputField.value = "";
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // 2. عرض مؤشر جاري الكتابة أو التحميل
+            const loadingDiv = document.createElement("div");
+            loadingDiv.className = "message bot-message";
+            loadingDiv.id = "loadingMsg";
+            loadingDiv.textContent = "جاري المعالجة والاستدلال...";
+            chatBox.appendChild(loadingDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            try {
+                // 3. إرسال الطلب لـ Django API
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ query: query })
+                });
+
+                const data = await response.json();
+                
+                // إزالة رسالة التحميل
+                document.getElementById("loadingMsg").remove();
+
+                const botMsgDiv = document.createElement("div");
+                botMsgDiv.className = "message bot-message";
+                
+                if (response.ok) {
+                    botMsgDiv.innerHTML = `
+                        ${data.response}
+                        <span class="meta-info">النية المكتشفة: ${data.intent_detected} | الثقة: ${(data.confidence_score * 100)}%</span>
+                    `;
+                } else {
+                    botMsgDiv.textContent = "خطأ من الخادم: " + (data.error || "حدث خطأ غير معروف");
+                }
+
+                chatBox.appendChild(botMsgDiv);
+            } catch (error) {
+                document.getElementById("loadingMsg").remove();
+                const errorDiv = document.createElement("div");
+                errorDiv.className = "message bot-message";
+                errorDiv.textContent = "تعذر الاتصال بالخادم. تأكد من أن خادم Django يعمل.";
+                chatBox.appendChild(errorDiv);
+            }
+
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        }
+    </script>
+
+</body>
+</html>

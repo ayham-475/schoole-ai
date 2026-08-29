@@ -1,0 +1,170 @@
+{
+  "daily_periods": [
+    {
+      "period_id": "P_ASSEMBLY",
+      "period_name": "الطابور الصباحي",
+      "start_time": "07:15",
+      "end_time": "07:30"
+    },
+    {
+      "period_id": "P_01",
+      "period_name": "الحصة الأولى",
+      "start_time": "07:30",
+      "end_time": "08:15"
+    },
+    {
+      "period_id": "P_02",
+      "period_name": "الحصة الثانية",
+      "start_time": "08:15",
+      "end_time": "09:00"
+    },
+    {
+      "period_id": "P_BREAK_1",
+      "period_name": "الاستراحة الأولى",
+      "start_time": "09:00",
+      "end_time": "09:30"
+    },
+    {
+      "period_id": "P_03",
+      "period_name": "الحصة الثالثة",
+      "start_time": "09:30",
+      "end_time": "10:15"
+    },
+    {
+      "period_id": "P_04",
+      "period_name": "الحصة الرابعة",
+      "start_time": "10:15",
+      "end_time": "11:00"
+    },
+    {
+      "period_id": "P_BREAK_2",
+      "period_name": "الاستراحة الثانية",
+      "start_time": "11:00",
+      "end_time": "11:20"
+    },
+    {
+      "period_id": "P_05",
+      "period_name": "الحصة الخامسة",
+      "start_time": "11:20",
+      "end_time": "12:05"
+    },
+    {
+      "period_id": "P_06",
+      "period_name": "الحصة السادسة",
+      "start_time": "12:05",
+      "end_time": "12:50"
+    }
+  ],
+  "weekly_schedules": [
+    {
+      "grade_id": "GRADE_12",
+      "grade_name": "الصف الثالث الثانوي",
+      "classes": [
+        {
+          "class_id": "CLASS_12_A",
+          "class_name": "3 / طبيعي / أ",
+          "schedule": {
+            "Sunday": [
+              {
+                "period_id": "P_01",
+                "subject_id": "SUB_MATH_3",
+                "teacher_id": "T_101"
+              },
+              {
+                "period_id": "P_02",
+                "subject_id": "SUB_PHY_3",
+                "teacher_id": "T_102"
+              },
+              {
+                "period_id": "P_03",
+                "subject_id": "SUB_ARABIC_3",
+                "teacher_id": "T_103"
+              },
+              {
+                "period_id": "P_04",
+                "subject_id": "SUB_MATH_3",
+                "teacher_id": "T_101"
+              },
+              {
+                "period_id": "P_05",
+                "subject_id": "SUB_CS_3",
+                "teacher_id": "T_104"
+              },
+              {
+                "period_id": "P_06",
+                "subject_id": "SUB_ISLAMIC_3",
+                "teacher_id": "T_105"
+              }
+            ],
+            "Monday": [
+              {
+                "period_id": "P_01",
+                "subject_id": "SUB_ARABIC_3",
+                "teacher_id": "T_103"
+              },
+              {
+                "period_id": "P_02",
+                "subject_id": "SUB_CS_3",
+                "teacher_id": "T_104"
+              },
+              {
+                "period_id": "P_03",
+                "subject_id": "SUB_MATH_3",
+                "teacher_id": "T_101"
+              },
+              {
+                "period_id": "P_04",
+                "subject_id": "SUB_PHY_3",
+                "teacher_id": "T_102"
+              },
+              {
+                "period_id": "P_05",
+                "subject_id": "SUB_ENG_3",
+                "teacher_id": "T_106"
+              },
+              {
+                "period_id": "P_06",
+                "subject_id": "SUB_CHEM_3",
+                "teacher_id": "T_107"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "grade_id": "GRADE_10",
+      "grade_name": "الصف الأول الثانوي",
+      "classes": [
+        {
+          "class_id": "CLASS_10_A",
+          "class_name": "1 / أ",
+          "schedule": {
+            "Sunday": [
+              {
+                "period_id": "P_01",
+                "subject_id": "SUB_PHY_1",
+                "teacher_id": "T_102"
+              },
+              {
+                "period_id": "P_02",
+                "subject_id": "SUB_ARABIC_1",
+                "teacher_id": "T_103"
+              },
+              {
+                "period_id": "P_03",
+                "subject_id": "SUB_MATH_1",
+                "teacher_id": "T_108"
+              },
+              {
+                "period_id": "P_04",
+                "subject_id": "SUB_ENG_1",
+                "teacher_id": "T_109"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
