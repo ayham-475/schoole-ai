@@ -366,8 +366,6 @@
     </style>
 </head>
 <body>
-    <h1>This is the first aganet</h1>
-
     <div class="chat-app">
         <!-- الرأس -->
         <header class="chat-header">
@@ -375,7 +373,7 @@
                 <div class="brand-icon">🎓</div>
                 <div class="brand-info">
                     <h1>مدرسة الرواد النموذجية الذكية</h1>
-                    <p><span class="status-dot"></span> المساعد الذكي التفاعلي نشط ومستعد</p>
+                    <p><span class="status-dot"></span> المساعد الذكي التفاعلي - مخصص لشؤون المدرسة</p>
                 </div>
             </div>
         </header>
@@ -387,7 +385,7 @@
             <div class="chip" onclick="askQuick('ما هي كتب الصف العاشر؟')">📚 كتب الصف العاشر</div>
             <div class="chip" onclick="askQuick('متى إجازة عيد الفطر؟')">🌴 إجازة العيد</div>
             <div class="chip" onclick="askQuick('ما هي شروط تسجيل طالب جديد؟')">📝 شروط القبول</div>
-            <div class="chip" onclick="askQuick('أين يقع معمل الحاسوب؟')">🏢 معمل الحاسوب</div>
+            <div class="chip" onclick="askQuick('أين تقع العيادة الطبية المدرسية وما هي مواعيدها؟')">🏥 العيادة الطبية</div>
             <div class="chip" onclick="askQuick('ما هي عقوبة الهروب من المدرسة؟')">⚖️ عقوبة الهروب</div>
             <div class="chip" onclick="askQuick('أين تقع المدرسة وما هو رقم التواصل؟')">📞 رقم وعنوان المدرسة</div>
         </div>
@@ -397,8 +395,9 @@
             <div class="message-row bot-row">
                 <div class="bubble bot-bubble">
                     مرحباً بك في <strong>مساعد مدرسة الرواد النموذجية الذكية</strong>! 🏫✨<br><br>
-                    أنا مهيأ للإجابة عن استفساراتك حول <strong>الجداول الدراسية</strong>، <strong>المعلمين ومكاتبهم</strong>، <strong>المناهج والكتب</strong>، <strong>التقويم والإجازات</strong>، <strong>لوائح الغياب والسلوك</strong>، و<strong>شروط القبول والتسجيل</strong>.<br><br>
-                    اختر من الاقتراحات السريعة أعلاه أو اكتب سؤالك مباشرة بأي صيغة!
+                    أنا نظام خبير ذكي <strong>مخصص حصرياً لشؤون المدرسة</strong> والأنظمة التعليمية للطلاب وأولياء الأمور.<br>
+                    يمكنك سؤالي عن: <strong>الجداول والحصص</strong>، <strong>المعلمين ومكاتبهم</strong>، <strong>المناهج والكتب</strong>، <strong>التقويم والإجازات</strong>، <strong>لوائح الغياب والسلوك</strong>، <strong>المرافق كالمكتبة والعيادة</strong>، و<strong>شروط القبول والتسجيل</strong>.<br><br>
+                    اختر من الاقتراحات السريعة أعلاه أو اكتب سؤالك المدرسي مباشرة!
                 </div>
             </div>
         </div>
@@ -511,10 +510,19 @@
                     }
                     metaHtml += `</div>`;
 
+                    const feedbackHtml = `
+                        <div class="feedback-container" style="margin-top: 10px; padding-top: 8px; border-top: 1px dashed #e2e8f0; display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: #64748b;">
+                            <span>هل الإجابة دقيقة؟</span>
+                            <button onclick="handleFeedback(this, true)" style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; padding: 2px 8px; cursor: pointer; font-size: 0.8rem;" title="نعم، مفيدة">👍 مفيدة</button>
+                            <button onclick="handleFeedback(this, false)" style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; padding: 2px 8px; cursor: pointer; font-size: 0.8rem;" title="غير مفيدة">👎 غير مفيدة</button>
+                        </div>
+                    `;
+
                     botRow.innerHTML = `
                         <div class="bubble bot-bubble">
                             ${formattedAns}
                             ${metaHtml}
+                            ${feedbackHtml}
                         </div>
                     `;
                 } else {
@@ -547,10 +555,15 @@
             }
         }
 
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
+        function handleFeedback(buttonElement, isPositive) {
+            const container = buttonElement.closest('.feedback-container');
+            if (container) {
+                if (isPositive) {
+                    container.innerHTML = `<span style="color: #10b981; font-weight: bold;">✨ شكراً لتقييمك الإيجابي! نسعد بخدمتك دائماً.</span>`;
+                } else {
+                    container.innerHTML = `<span style="color: #f59e0b; font-weight: bold;">📝 شكراً لملاحظتك! سنعمل على تحسين دقة الإجابة في قواعد المعرفة.</span>`;
+                }
+            }
         }
     </script>
 </body>
