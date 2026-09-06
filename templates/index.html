@@ -848,21 +848,52 @@
                     botRow.innerHTML = `
                         <div class="bubble bot-bubble">
                             <button class="copy-btn" onclick="copyResponse(this)" title="نسخ">📋</button>
-                            <div class="bot-content">${formattedAns}</div>
-                            ${metaHtml}
-                            ${feedbackHtml}
+                            <div class="bot-content"></div>
                         </div>
                         <div class="msg-time">${getTimeString()}</div>
                     `;
+                    chatBox.appendChild(botRow);
+
+                    const contentDiv = botRow.querySelector('.bot-content');
+                    const bubbleDiv = botRow.querySelector('.bubble');
+                    let i = 0;
+                    let tempHtml = "";
+
+                    function typeWriter() {
+                        if (i < formattedAns.length) {
+                            // If we hit an HTML tag, inject the whole tag instantly to prevent broken DOM
+                            if (formattedAns[i] === '<') {
+                                let tagEnd = formattedAns.indexOf('>', i);
+                                if (tagEnd !== -1) {
+                                    tempHtml += formattedAns.substring(i, tagEnd + 1);
+                                    i = tagEnd + 1;
+                                }
+                            } else {
+                                tempHtml += formattedAns[i];
+                                i++;
+                            }
+                            contentDiv.innerHTML = tempHtml;
+                            chatBox.scrollTop = chatBox.scrollHeight;
+                            
+                            // Randomize typing speed for realism (10ms to 30ms)
+                            let speed = Math.random() * 20 + 10;
+                            setTimeout(typeWriter, speed);
+                        } else {
+                            // When finished typing, show metadata and feedback buttons
+                            bubbleDiv.insertAdjacentHTML('beforeend', metaHtml + feedbackHtml);
+                            chatBox.scrollTop = chatBox.scrollHeight;
+                        }
+                    }
+                    
+                    typeWriter();
                 } else {
                     botRow.innerHTML = `
                         <div class="bubble bot-bubble" style="color: #ef4444;">
                             ⚠️ عذراً: ${escapeHtml(data.error || "حدث خطأ غير متوقع أثناء معالجة الطلب.")}
                         </div>
                     `;
+                    chatBox.appendChild(botRow);
                 }
-
-                chatBox.appendChild(botRow);
             } catch (error) {
                 document.getElementById("typingIndicator")?.remove();
                 const errRow = document.createElement("div");
