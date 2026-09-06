@@ -748,7 +748,8 @@ class InferenceEngine:
                 f"🏆 **شروط الانضمام للوحة الشرف والتكريم:**\n\n"
                 f"• **الحد الأدنى للمعدل:** لا يقل عن `{crit.get('minimum_gpa_percentage', 90)}%`.\n"
                 f"• **تقييم السلوك:** ألا يقل عن `{crit.get('behavior_score_minimum', 'ممتاز')}`.\n"
-                f"• **الرسوب:** {crit.get('no_failed_subjects_condition', 'عدم الرسوب في أي مادة')}."
+                f"• **الغياب بدون عذر:** لا يزيد عن `{crit.get('max_unexcused_absences', 0)}` أيام.\n"
+                f"• **السجل السلوكي:** {crit.get('disciplinary_record', 'خلو السجل من أي مخالفات')}."
             )
             return QueryResult(response=res, sources_used=['evaluation_policy.json'], confidence=0.94)
 
@@ -762,10 +763,12 @@ class InferenceEngine:
         # 3. توزيع الدرجات
         components = dist.get('components', {})
         cw = components.get('course_work', {})
+        op = components.get('oral_and_practical', {})
         wf = components.get('written_final', {})
         res = (
             f"📊 **سياسة تقييم وتوزيع الدرجات:**\n\n"
-            f"• **أعمال السنة والاختبارات الدورية:** `{cw.get('weight_percentage', 50)}%` ({cw.get('description', '')})\n"
+            f"• **أعمال السنة والاختبارات الدورية:** `{cw.get('weight_percentage', 30)}%` ({cw.get('description', '')})\n"
+            f"• **الاختبارات الشفهية والعملية:** `{op.get('weight_percentage', 20)}%` ({op.get('description', '')})\n"
             f"• **الاختبار النهائي التحريري:** `{wf.get('weight_percentage', 50)}%` ({wf.get('description', '')})\n"
             f"• **الحد الأدنى للنجاح:** `{dist.get('passing_threshold', 50)}%` في المادة الواحدة.\n"
             f"📌 {dist.get('passing_note', '')}"
