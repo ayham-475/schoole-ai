@@ -1,13 +1,14 @@
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional, Union
+
 
 class ResponseGenerator:
     """
-    وحدة توليد الردود (Response Generator).
-    تأخذ نتائج محرك الاستدلال وتحولها إلى ردود بشرية طبيعية ومنسقة باللغة العربية.
+    وحدة توليد وتنسيق الردود النهائية (Response Generator).
+    - تستقبل نتائج محرك الاستدلال (QueryResult، Dict، أو نص خام).
+    - تنظم النصوص وتضمن التنسيق الجمالي باللغة العربية مع الرموز التعبيرية (Emojis).
     """
 
     def __init__(self):
-        # خريطة عكسية لترجمة الأيام إلى العربية لعرضها للمستخدم
         self.days_ar_map = {
             "Sunday": "الأحد",
             "Monday": "الإثنين",
@@ -16,87 +17,63 @@ class ResponseGenerator:
             "Thursday": "الخميس"
         }
 
-    def generate_response(self, intent, inference_result, entities=None):
-        """توليد الرد النهائي بناءً على نتائج الاستدلال والنية"""
-        
-        # إذا كانت نتيجة الاستدلال نصاً مباشراً، نقوم بإرجاعها أو استخدامها كإجابة جاهزة
+    def generate_response(self, intent: str, inference_result: Any, entities: Optional[Dict[str, Any]] = None) -> str:
+        """
+        توليد الرد النهائي المنسق بناءً على نتيجة الاستدلال.
+        """
+        entities = entities or {}
+
+        # 1. إذا كانت النتيجة نصاً مباشراً
         if isinstance(inference_result, str):
-            return inference_result
-            
-        # إذا كانت نتيجة الاستدلال على شكل قاموس (Dictionary)
+            return inference_result.strip()
+
+        # 2. إذا كانت كائناً يحتوي على الخاصية response أو answer (مثل QueryResult)
+        if hasattr(inference_result, 'response'):
+            return getattr(inference_result, 'response', '').strip()
+
+        if hasattr(inference_result, 'answer'):
+            return getattr(inference_result, 'answer', '').strip()
+
+        # 3. إذا كانت النتيجة قاموساً (Dictionary)
         if isinstance(inference_result, dict):
-            if inference_result.get("status") != "success":
-                return inference_result.get("response", "عذراً، لم أتمكن من معالجة طلبك.")
-            return inference_result.get("response", "")
-            
-        # إذا كانت كائناً (Object)
-        if hasattr(inference_result, 'status') and inference_result.status != "success":
-            return getattr(inference_result, 'response', "عذراً، حدث خطأ أثناء جلب البيانات.")
-            
-        return str(inference_result)
-    def _format_error_response(self, error_message: str) -> str:
-        """تنسيق رسائل الأخطاء بشكل ودي ولبق."""
-        return f"عذراً، {error_message} 💡 يرجى التأكد من كتابة الصف واليوم بشكل واضح."
+            if "response" in inference_result:
+                return str(inference_result["response"]).strip()
+            if "data" in inference_result and isinstance(inference_result["data"], list):
+                if intent == "query_schedule":
+                    return self._format_schedule_response(inference_result["data"], entities)
+
+        return str(inference_result).strip()
 
     def _format_schedule_response(self, schedule_data: List[Dict[str, Any]], entities: Dict[str, Any]) -> str:
         """
-        تنسيق الجدول الدراسي على شكل قائمة نقطية (Markdown) جذابة وسهلة القراءة.
+        تنسيق الجدول الدراسي على شكل قائمة نقطية جذابة.
         """
-        # محاولة استرجاع اسم اليوم بالعربية، أو استخدام قيمة افتراضية
         day_en = entities.get("day", "")
         day_ar = self.days_ar_map.get(day_en, "المحدد")
-        
-        class_raw = entities.get("class_raw", "غير محدد")
-        
-        # مقدمة الرد
+        class_raw = entities.get("class_raw", "العامة")
+
         response_lines = [
             f"📅 **إليك الجدول الدراسي ليوم {day_ar} (شعبة {class_raw}):**\n"
         ]
 
-        # بناء سطور الجدول بأسلوب القائمة النقطية
         for item in schedule_data:
-            period_id = item.get("period_id", "").replace("P_", "")
+            period_id = str(item.get("period_id", "")).replace("P_", "")
             subject = item.get("subject", "غير محدد")
             teacher = item.get("teacher", "غير محدد")
-            location = item.get("location_id", "")
+            location = item.get("location_name", item.get("location_id", ""))
 
-            # تنسيق السطر لكل حصة
-            line = f"* **الحصة {period_id}:** مادة {subject} | 👨‍🏫 أ. {teacher}"
+            line = f"• **الحصة {period_id}:** مادة {subject} | 👨‍🏫 {teacher}"
             if location and location != "غير محدد":
-                line += f" | 📍 ({location})"
-            
+                line += f" (📍 {location})"
             response_lines.append(line)
 
-        # تذييل الرد (رسالة تشجيعية بسيطة)
-        response_lines.append("\n💡 *أتمنى لك يوماً دراسياً موفقاً ومليئاً بالنجاح!*")
-
-        # دمج السطور وإعادتها كنص واحد
+        response_lines.append("\n💡 *نتمنى لك يوماً دراسياً ممتعاً ومليئاً بالتوفيق!*")
         return "\n".join(response_lines)
 
 
-# ==========================================
-# اختبار محاكاة (Quick Test)
-# ==========================================
 if __name__ == "__main__":
-    from dataclasses import dataclass
-    
-    # محاكاة كائن النتيجة القادم من InferenceEngine
-    @dataclass
-    class MockInferenceResult:
-        status: str
-        data: List[Dict[str, Any]]
-        message: str
-
-    mock_data = [
-        {"period_id": "P_01", "subject": "الرياضيات", "teacher": "أحمد محمود", "location_id": "LOC_CLASS_3"},
-        {"period_id": "P_02", "subject": "الفيزياء", "teacher": "سالم عبدالله", "location_id": "LOC_LAB_1"},
-    ]
-    
-    mock_result = MockInferenceResult(status="success", data=mock_data, message="")
-    mock_entities = {"day": "Sunday", "class_raw": "1"}
-
     generator = ResponseGenerator()
-    final_text = generator.generate_response("query_schedule", mock_result, mock_entities)
+    print("ResponseGenerator جاهز للاستخدام بنجاح.")
+
+
     
-    print("--- نتيجة الرد النهائي الموجه للمستخدم ---")
-    print(final_text)
