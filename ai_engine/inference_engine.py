@@ -925,6 +925,9 @@ class InferenceEngine:
                 matched_count = sum(1 for kw in keywords if kw in norm_val)
                 if matched_count > 0:
                     score = (matched_count / len(keywords)) * 100
+                    # إعطاء أولوية مطلقة لملف الأسئلة الشائعة لأنه يحتوي على السياق الكامل للسؤال والجواب
+                    if source_file == 'faq.json':
+                        score += 50
                     candidates.append((score, val, source_file))
 
         for fname, content in self.kb_data.items():
