@@ -1,39 +1,76 @@
 {
   "metadata": {
     "version": "1.0",
-    "status": "proposed_knowledge_base",
+    "status": "proposed_academic_exam_schedule",
     "language": "ar",
-    "last_updated": "2026-09-07",
-    "description": "قاعدة معرفة منظمة ومقترحة لمدرسة النجاح باليعر، مبنية على المعلومات التي قدمها المستخدم. بعض البيانات غير المؤكدة تم وضع علامة عليها بوضوح."
+    "description": "نظام جدول الاختبارات لمدرسة النجاح باليعر، مبني على سنة دراسية تبدأ في 1 محرم وتتكون من فصلين دراسيين."
   },
-  "academic_year": {
-    "current_year": "1445-1446",
-    "start_date": "1 محرم",
-    "end_date": "نهاية الفصل الثاني",
-    "total_weeks": 24
-  },
-  "semesters": [
+  "academic_year": "1445-1446",
+  "terms": [
     {
-      "semester_id": "SEM_1",
-      "semester_name": "الفصل الدراسي الأول",
+      "name": "الفصل الدراسي الأول",
       "start_date": "1 محرم",
-      "end_date": "بعد 3 أشهر",
-      "exams_start_date": "نهاية الشهر الثالث"
+      "end_date": "نهاية الشهر 3",
+      "status": "قادم",
+      "key_milestones": [
+        {
+          "title": "الاختبار الشهري الأول",
+          "start_date": "نهاية الشهر 1",
+          "end_date": "نهاية الشهر 1"
+        },
+        {
+          "title": "الاختبار الشهري الثاني",
+          "start_date": "نهاية الشهر 2",
+          "end_date": "نهاية الشهر 2"
+        },
+        {
+          "title": "الاختبار الشهري الثالث",
+          "start_date": "نهاية الشهر 3",
+          "end_date": "نهاية الشهر 3"
+        },
+        {
+          "title": "اختبار نصف السنة",
+          "start_date": "نهاية الفصل الأول",
+          "end_date": "نهاية الفصل الأول"
+        }
+      ]
     },
     {
-      "semester_id": "SEM_2",
-      "semester_name": "الفصل الدراسي الثاني",
-      "start_date": "الشهر الرابع",
-      "end_date": "الشهر السادس",
-      "exams_start_date": "نهاية الفصل الدراسي الثاني"
+      "name": "الفصل الدراسي الثاني",
+      "start_date": "الشهر 4",
+      "end_date": "نهاية الشهر 6",
+      "status": "قادم",
+      "key_milestones": [
+        {
+          "title": "الاختبار الشهري الأول للفصل الثاني",
+          "start_date": "نهاية الشهر 4",
+          "end_date": "نهاية الشهر 4"
+        },
+        {
+          "title": "الاختبار الشهري الثاني للفصل الثاني",
+          "start_date": "نهاية الشهر 5",
+          "end_date": "نهاية الشهر 5"
+        },
+        {
+          "title": "الاختبار الشهري الثالث للفصل الثاني",
+          "start_date": "نهاية الشهر 6",
+          "end_date": "نهاية الشهر 6"
+        },
+        {
+          "title": "اختبار نهاية السنة",
+          "start_date": "نهاية الفصل الثاني",
+          "end_date": "نهاية الفصل الثاني"
+        }
+      ]
     }
   ],
-  "holidays": [
+  "holidays_and_vacations": [
     {
-      "holiday_name": "الخميس والجمعة",
-      "start_date": "أسبوعياً",
-      "duration_days": 2,
-      "type": "عطلة أسبوعية"
+      "title": "إجازة نهاية الأسبوع",
+      "start_date": "الخميس",
+      "end_date": "الجمعة",
+      "category": "أسبوعية"
     }
-  ]
+  ],
+  "administrative_deadlines": []
 }
