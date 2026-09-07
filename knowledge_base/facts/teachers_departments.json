@@ -1,127 +1,576 @@
 {
   "metadata": {
-    "version": "1.1",
-    "last_updated": "2026-08-29",
-    "description": "بيانات الأقسام الأكاديمية والمعلمين وساعاتهم المكتبية"
+    "version": "2.0"
   },
   "departments": [
     {
-      "department_id": "DEP_MATH",
-      "department_name": "قسم الرياضيات والعلوم الطبيعية",
-      "aliases": ["رياضيات", "علوم طبيعية", "علوم", "حساب", "فيزياء"],
-      "head_of_department_id": "T_101"
+      "department_id": "DEP_PRIMARY",
+      "department_name": "صفوف أولية",
+      "aliases": [
+        "اولية"
+      ]
     },
     {
-      "department_id": "DEP_LANG",
-      "department_name": "قسم اللغات والعلوم الإنسانية",
-      "aliases": ["لغات", "لغة عربية", "عربي", "علوم إنسانية", "أدب"],
-      "head_of_department_id": "T_103"
+      "department_id": "DEP_UPPER_PRIMARY",
+      "department_name": "صفوف عليا",
+      "aliases": [
+        "عليا"
+      ]
     },
     {
-      "department_id": "DEP_CS",
-      "department_name": "قسم الحاسوب وتقنية المعلومات",
-      "aliases": ["حاسب", "كمبيوتر", "تقنية معلومات", "IT", "حاسب آلي", "برمجة"],
-      "head_of_department_id": "T_104"
+      "department_id": "DEP_MIDDLE",
+      "department_name": "المرحلة الإعدادية",
+      "aliases": [
+        "اعدادية"
+      ]
+    },
+    {
+      "department_id": "DEP_SECONDARY",
+      "department_name": "المرحلة الثانوية",
+      "aliases": [
+        "ثانوية"
+      ]
     }
   ],
   "teachers": [
     {
-      "teacher_id": "T_101",
+      "teacher_id": "T_1",
       "title": "أ.",
-      "clean_name": "أحمد محمود العلي",
-      "full_name": "أ. أحمد محمود العلي",
-      "search_keywords": ["احمد العلي", "احمد محمود", "استاذ احمد"],
-      "department_id": "DEP_MATH",
-      "specialization": "الرياضيات البحتة والتطبيقية",
-      "subjects_taught": ["الرياضيات", "التفاضل والتكامل"],
-      "assigned_grades": ["GRADE_11", "GRADE_12"],
-      "contact": {
-        "email": "a.alali@school.edu"
-      },
-      "available_meeting_hours": [
-        {
-          "day": "Sunday",
-          "start_time": "10:15",
-          "end_time": "11:00",
-          "location_id": "LOC_OFFICE_204",
-          "location_name": "مكتب 204"
-        },
-        {
-          "day": "Tuesday",
-          "start_time": "11:20",
-          "end_time": "12:05",
-          "location_id": "LOC_OFFICE_204",
-          "location_name": "مكتب 204"
-        }
+      "clean_name": "حسين حسين الحاج اليعري",
+      "aliases": [
+        "حسين",
+        "حسين حسين الحاج اليعري"
+      ],
+      "department_id": "DEP_PRIMARY",
+      "roles": [
+        "معلم"
+      ],
+      "taught_subjects": [
+        "معلم الصف"
+      ],
+      "taught_grades": [
+        "الأول الأساسي"
       ]
     },
     {
-      "teacher_id": "T_102",
+      "teacher_id": "T_2",
       "title": "أ.",
-      "clean_name": "خالد عبد الرحمن السعيد",
-      "full_name": "أ. خالد عبد الرحمن السعيد",
-      "search_keywords": ["خالد السعيد", "استاذ خالد", "خالد عبدالرحمن"],
-      "department_id": "DEP_MATH",
-      "specialization": "الفيزياء المتقدمة",
-      "subjects_taught": ["الفيزياء", "الفيزياء التطبيقية"],
-      "assigned_grades": ["GRADE_10", "GRADE_12"],
-      "contact": {
-        "email": "k.alsaeed@school.edu"
-      },
-      "available_meeting_hours": [
-        {
-          "day": "Monday",
-          "start_time": "09:30",
-          "end_time": "10:15",
-          "location_id": "LOC_LAB_PHYSICS",
-          "location_name": "مختبر الفيزياء"
-        }
+      "clean_name": "رهام",
+      "aliases": [
+        "رهام",
+        "رهام"
+      ],
+      "department_id": "DEP_PRIMARY",
+      "roles": [
+        "معلم"
+      ],
+      "taught_subjects": [
+        "معلمة الصف الوحيدة"
+      ],
+      "taught_grades": [
+        "الثاني الأساسي"
       ]
     },
     {
-      "teacher_id": "T_103",
-      "title": "د.",
-      "clean_name": "سارة إبراهيم الشمري",
-      "full_name": "د. سارة إبراهيم الشمري",
-      "search_keywords": ["ساره الشمري", "دكتوره ساره", "سارة ابراهيم"],
-      "department_id": "DEP_LANG",
-      "specialization": "اللغة العربية والنحو",
-      "subjects_taught": ["اللغة العربية", "النحو والصرف", "الأدب"],
-      "assigned_grades": ["GRADE_10", "GRADE_11", "GRADE_12"],
-      "contact": {
-        "email": "s.alshammari@school.edu"
-      },
-      "available_meeting_hours": [
-        {
-          "day": "Wednesday",
-          "start_time": "11:20",
-          "end_time": "12:05",
-          "location_id": "LOC_OFFICE_102",
-          "location_name": "مكتب 102"
-        }
+      "teacher_id": "T_3",
+      "title": "أ.",
+      "clean_name": "أحمد سعيد صالح اليعري",
+      "aliases": [
+        "أحمد",
+        "أحمد سعيد صالح اليعري"
+      ],
+      "department_id": "DEP_PRIMARY",
+      "roles": [
+        "معلم"
+      ],
+      "taught_subjects": [
+        "معلم الصف"
+      ],
+      "taught_grades": [
+        "الثالث الأساسي"
       ]
     },
     {
-      "teacher_id": "T_104",
+      "teacher_id": "T_4",
       "title": "أ.",
-      "clean_name": "معاذ عبدالله",
-      "full_name": "أ. معاذ عبدالله",
-      "search_keywords": ["معاذ عبدالله", "استاذ معاذ", "معاذ"],
-      "department_id": "DEP_CS",
-      "specialization": "برمجة وذكاء اصطناعي",
-      "subjects_taught": ["الحاسب الآلي", "البرمجة", "الذكاء الاصطناعي"],
-      "assigned_grades": ["GRADE_11", "GRADE_12"],
-      "contact": {
-        "email": "m.abdullah@school.edu"
-      },
-      "available_meeting_hours": [
-        {
-          "day": "Thursday",
-          "start_time": "08:15",
-          "end_time": "09:00",
-          "location_id": "LOC_LAB_COMP_1",
-          "location_name": "معمل الحاسب 1"
-        }
+      "clean_name": "علي أبو هاني",
+      "aliases": [
+        "علي",
+        "علي أبو هاني"
+      ],
+      "department_id": "DEP_UPPER_PRIMARY",
+      "roles": [
+        "اللغة العربية"
+      ],
+      "taught_subjects": [
+        "اللغة العربية"
+      ],
+      "taught_grades": [
+        "الرابع الأساسي",
+        "الخامس الأساسي",
+        "السادس الأساسي"
+      ]
+    },
+    {
+      "teacher_id": "T_5",
+      "title": "أ.",
+      "clean_name": "عباد بريه",
+      "aliases": [
+        "عباد",
+        "عباد بريه"
+      ],
+      "department_id": "DEP_UPPER_PRIMARY",
+      "roles": [
+        "الاجتماعيات"
+      ],
+      "taught_subjects": [
+        "الاجتماعيات"
+      ],
+      "taught_grades": [
+        "الرابع الأساسي",
+        "الخامس الأساسي",
+        "السادس الأساسي"
+      ]
+    },
+    {
+      "teacher_id": "T_6",
+      "title": "أ.",
+      "clean_name": "عبدالله يحيى اليعري",
+      "aliases": [
+        "عبدالله",
+        "عبدالله يحيى اليعري"
+      ],
+      "department_id": "DEP_UPPER_PRIMARY",
+      "roles": [
+        "الرياضيات"
+      ],
+      "taught_subjects": [
+        "الرياضيات"
+      ],
+      "taught_grades": [
+        "الرابع الأساسي",
+        "الخامس الأساسي",
+        "السادس الأساسي"
+      ]
+    },
+    {
+      "teacher_id": "T_7",
+      "title": "أ.",
+      "clean_name": "أحمد علي اليعري",
+      "aliases": [
+        "أحمد",
+        "أحمد علي اليعري"
+      ],
+      "department_id": "DEP_UPPER_PRIMARY",
+      "roles": [
+        "القرآن والإسلامية"
+      ],
+      "taught_subjects": [
+        "القرآن والإسلامية"
+      ],
+      "taught_grades": [
+        "الرابع الأساسي",
+        "الخامس الأساسي",
+        "السادس الأساسي"
+      ]
+    },
+    {
+      "teacher_id": "T_8",
+      "title": "أ.",
+      "clean_name": "فؤاد بريه",
+      "aliases": [
+        "فؤاد",
+        "فؤاد بريه"
+      ],
+      "department_id": "DEP_UPPER_PRIMARY",
+      "roles": [
+        "العلوم"
+      ],
+      "taught_subjects": [
+        "العلوم"
+      ],
+      "taught_grades": [
+        "الرابع الأساسي",
+        "الخامس الأساسي",
+        "السادس الأساسي"
+      ]
+    },
+    {
+      "teacher_id": "T_9",
+      "title": "أ.",
+      "clean_name": "محمد حسين عربي",
+      "aliases": [
+        "محمد",
+        "محمد حسين عربي"
+      ],
+      "department_id": "DEP_UPPER_PRIMARY",
+      "roles": [
+        "تغطية الغياب واللغة العربية"
+      ],
+      "taught_subjects": [
+        "تغطية الغياب واللغة العربية"
+      ],
+      "taught_grades": [
+        "الرابع الأساسي",
+        "الخامس الأساسي",
+        "السادس الأساسي"
+      ]
+    },
+    {
+      "teacher_id": "T_10",
+      "title": "أ.",
+      "clean_name": "محمد علي صالح اليعري",
+      "aliases": [
+        "محمد",
+        "محمد علي صالح اليعري"
+      ],
+      "department_id": "DEP_MIDDLE",
+      "roles": [
+        "الرياضيات"
+      ],
+      "taught_subjects": [
+        "الرياضيات"
+      ],
+      "taught_grades": [
+        "السابع",
+        "الثامن",
+        "التاسع"
+      ]
+    },
+    {
+      "teacher_id": "T_11",
+      "title": "أ.",
+      "clean_name": "ناجي بريه",
+      "aliases": [
+        "ناجي",
+        "ناجي بريه"
+      ],
+      "department_id": "DEP_MIDDLE",
+      "roles": [
+        "العلوم"
+      ],
+      "taught_subjects": [
+        "العلوم"
+      ],
+      "taught_grades": [
+        "السابع",
+        "الثامن"
+      ]
+    },
+    {
+      "teacher_id": "T_12",
+      "title": "أ.",
+      "clean_name": "فؤاد بريه",
+      "aliases": [
+        "فؤاد",
+        "فؤاد بريه"
+      ],
+      "department_id": "DEP_MIDDLE",
+      "roles": [
+        "العلوم"
+      ],
+      "taught_subjects": [
+        "العلوم"
+      ],
+      "taught_grades": [
+        "التاسع"
+      ]
+    },
+    {
+      "teacher_id": "T_13",
+      "title": "أ.",
+      "clean_name": "عبدالله عثمان",
+      "aliases": [
+        "عبدالله",
+        "عبدالله عثمان"
+      ],
+      "department_id": "DEP_MIDDLE",
+      "roles": [
+        "القرآن والإسلامية"
+      ],
+      "taught_subjects": [
+        "القرآن والإسلامية"
+      ],
+      "taught_grades": [
+        "السابع",
+        "الثامن",
+        "التاسع"
+      ]
+    },
+    {
+      "teacher_id": "T_14",
+      "title": "أ.",
+      "clean_name": "أحسن عبده",
+      "aliases": [
+        "أحسن",
+        "أحسن عبده"
+      ],
+      "department_id": "DEP_MIDDLE",
+      "roles": [
+        "اللغة العربية"
+      ],
+      "taught_subjects": [
+        "اللغة العربية"
+      ],
+      "taught_grades": [
+        "السابع",
+        "الثامن",
+        "التاسع"
+      ]
+    },
+    {
+      "teacher_id": "T_15",
+      "title": "أ.",
+      "clean_name": "علي أحمد بريه",
+      "aliases": [
+        "علي",
+        "علي أحمد بريه"
+      ],
+      "department_id": "DEP_MIDDLE",
+      "roles": [
+        "الاجتماعيات"
+      ],
+      "taught_subjects": [
+        "الاجتماعيات"
+      ],
+      "taught_grades": [
+        "السابع",
+        "الثامن",
+        "التاسع"
+      ]
+    },
+    {
+      "teacher_id": "T_16",
+      "title": "أ.",
+      "clean_name": "عبدالله بريه",
+      "aliases": [
+        "عبدالله",
+        "عبدالله بريه"
+      ],
+      "department_id": "DEP_MIDDLE",
+      "roles": [
+        "اللغة الإنجليزية"
+      ],
+      "taught_subjects": [
+        "اللغة الإنجليزية"
+      ],
+      "taught_grades": [
+        "السابع",
+        "الثامن"
+      ]
+    },
+    {
+      "teacher_id": "T_17",
+      "title": "أ.",
+      "clean_name": "عبدالله عزي اليعري",
+      "aliases": [
+        "عبدالله",
+        "عبدالله عزي اليعري"
+      ],
+      "department_id": "DEP_MIDDLE",
+      "roles": [
+        "اللغة الإنجليزية"
+      ],
+      "taught_subjects": [
+        "اللغة الإنجليزية"
+      ],
+      "taught_grades": [
+        "التاسع"
+      ]
+    },
+    {
+      "teacher_id": "T_18",
+      "title": "أ.",
+      "clean_name": "عبدالله محمد حسين أحسن اليعري",
+      "aliases": [
+        "عبدالله",
+        "عبدالله محمد حسين أحسن اليعري"
+      ],
+      "department_id": "DEP_SECONDARY",
+      "roles": [
+        "معلم"
+      ],
+      "taught_subjects": [
+        "القرآن والتجويد والتلاوة والحفظ",
+        "الحديث",
+        "الفقه",
+        "السيرة"
+      ],
+      "taught_grades": [
+        "الأول الثانوي",
+        "الثاني الثانوي",
+        "الثالث الثانوي"
+      ]
+    },
+    {
+      "teacher_id": "T_19",
+      "title": "أ.",
+      "clean_name": "حمود بريه",
+      "aliases": [
+        "حمود",
+        "حمود بريه"
+      ],
+      "department_id": "DEP_SECONDARY",
+      "roles": [
+        "معلم"
+      ],
+      "taught_subjects": [
+        "اللغة العربية",
+        "النحو",
+        "القراءة",
+        "الأدب",
+        "النصوص"
+      ],
+      "taught_grades": [
+        "الأول الثانوي",
+        "الثاني الثانوي",
+        "الثالث الثانوي"
+      ]
+    },
+    {
+      "teacher_id": "T_20",
+      "title": "أ.",
+      "clean_name": "رزق اليعري",
+      "aliases": [
+        "رزق",
+        "رزق اليعري"
+      ],
+      "department_id": "DEP_SECONDARY",
+      "roles": [
+        "معلم"
+      ],
+      "taught_subjects": [
+        "الرياضيات"
+      ],
+      "taught_grades": [
+        "الأول الثانوي",
+        "الثاني الثانوي",
+        "الثالث الثانوي"
+      ]
+    },
+    {
+      "teacher_id": "T_21",
+      "title": "أ.",
+      "clean_name": "فؤاد بريه",
+      "aliases": [
+        "فؤاد",
+        "فؤاد بريه"
+      ],
+      "department_id": "DEP_SECONDARY",
+      "roles": [
+        "معلم"
+      ],
+      "taught_subjects": [
+        "الكيمياء"
+      ],
+      "taught_grades": [
+        "الأول الثانوي",
+        "الثاني الثانوي",
+        "الثالث الثانوي"
+      ]
+    },
+    {
+      "teacher_id": "T_22",
+      "title": "أ.",
+      "clean_name": "محمد علي صالح اليعري",
+      "aliases": [
+        "محمد",
+        "محمد علي صالح اليعري"
+      ],
+      "department_id": "DEP_SECONDARY",
+      "roles": [
+        "معلم"
+      ],
+      "taught_subjects": [
+        "الفيزياء"
+      ],
+      "taught_grades": [
+        "الأول الثانوي",
+        "الثاني الثانوي",
+        "الثالث الثانوي"
+      ]
+    },
+    {
+      "teacher_id": "T_23",
+      "title": "أ.",
+      "clean_name": "ناجي حمود الجلال",
+      "aliases": [
+        "ناجي",
+        "ناجي حمود الجلال"
+      ],
+      "department_id": "DEP_SECONDARY",
+      "roles": [
+        "معلم"
+      ],
+      "taught_subjects": [
+        "الأحياء"
+      ],
+      "taught_grades": [
+        "الأول الثانوي",
+        "الثاني الثانوي",
+        "الثالث الثانوي"
+      ]
+    },
+    {
+      "teacher_id": "T_24",
+      "title": "أ.",
+      "clean_name": "يعري عبده حسين اليعري",
+      "aliases": [
+        "يعري",
+        "يعري عبده حسين اليعري"
+      ],
+      "department_id": "DEP_SECONDARY",
+      "roles": [
+        "معلم"
+      ],
+      "taught_subjects": [
+        "اللغة الإنجليزية"
+      ],
+      "taught_grades": [
+        "الأول الثانوي",
+        "الثاني الثانوي",
+        "الثالث الثانوي"
+      ]
+    },
+    {
+      "teacher_id": "T_25",
+      "title": "أ.",
+      "clean_name": "يحيى بريه",
+      "aliases": [
+        "يحيى",
+        "يحيى بريه"
+      ],
+      "department_id": "DEP_SECONDARY",
+      "roles": [
+        "معلم",
+        "مسؤول الأنشطة",
+        "مسؤول الطابور الصباحي"
+      ],
+      "taught_subjects": [
+        "مجتمع"
+      ],
+      "taught_grades": [
+        "الأول الثانوي"
+      ]
+    },
+    {
+      "teacher_id": "T_26",
+      "title": "أ.",
+      "clean_name": "علي أحمد بريه",
+      "aliases": [
+        "علي",
+        "علي أحمد بريه"
+      ],
+      "department_id": "DEP_SECONDARY",
+      "roles": [
+        "معلم"
+      ],
+      "taught_subjects": [
+        "التاريخ",
+        "الجغرافيا"
+      ],
+      "taught_grades": [
+        "الأول الثانوي"
       ]
     }
   ]

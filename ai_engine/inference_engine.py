@@ -427,7 +427,7 @@ class InferenceEngine:
                 for p in filtered_periods:
                     period_info = self.periods_by_id.get(p.get('period_id'), {})
                     time_str = f"({period_info.get('start_time')} - {period_info.get('end_time')})" if period_info else ""
-                    teacher_info = self._get_teacher_for_subject(p.get('subject_id'))
+                    teacher_info = p.get('teacher_name') or self._get_teacher_for_subject(p.get('subject_id'))
                     lines.append(f"• **الحصة {p.get('period_id', '').replace('P_', '')}:** {time_str} | 👨‍🏫 المعلم: {teacher_info}")
                 return QueryResult(response="\n".join(lines), sources_used=['schedules_timetable.json', 'teachers_departments.json'], confidence=0.92)
 
@@ -443,7 +443,7 @@ class InferenceEngine:
             sub_name = self._get_subject_name(sub_id)
             period_info = self.periods_by_id.get(pid, {})
             time_str = f"({period_info.get('start_time', '')} - {period_info.get('end_time', '')})" if period_info else ""
-            teacher_name = self._get_teacher_for_subject(sub_id)
+            teacher_name = item.get('teacher_name') or self._get_teacher_for_subject(sub_id)
 
             lines.append(f"• **الحصة {pid.replace('P_', '')}:** {sub_name} {time_str} | 👨‍🏫 {teacher_name}")
 
