@@ -556,7 +556,11 @@ class InferenceEngine:
         # 4. عرض قائمة المعلمين العامة
         lines = ["👨‍🏫 **قائمة المعلمين المتاحين للاستفسار:**\n"]
         for t in teachers:
-            lines.append(f"• **{t.get('title')} {t.get('clean_name')}** ({t.get('specialization')}) - المواد: {', '.join(t.get('subjects_taught', []))}")
+            subj = t.get('subjects_taught', t.get('taught_subjects', []))
+            spec = t.get('specialization', t.get('department_id', 'عام'))
+            if isinstance(spec, str) and spec.startswith('DEP_'):
+                spec = spec.replace('DEP_', 'قسم ')
+            lines.append(f"• **{t.get('title', 'أ.')} {t.get('clean_name')}** ({spec}) - المواد: {', '.join(subj) if subj else 'غير محدد'}")
         lines.append("\n💡 يمكنك السؤال باسم المعلم أو المادة لمعرفة مواعيد الاستقبال ومكتبه.")
         return QueryResult(response="\n".join(lines), sources_used=['teachers_departments.json'], confidence=0.88)
 
