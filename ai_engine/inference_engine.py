@@ -174,7 +174,7 @@ class InferenceEngine:
         """
         raw_query = user_query.strip()
         if not raw_query:
-            return QueryResult(response="مرحباً بك! كيف يمكنني مساعدتك اليوم بخصوص مدرسة الرواد؟", confidence=1.0)
+            return QueryResult(response="مرحباً بك! كيف يمكنني مساعدتك اليوم بخصوص مدرسة النجاح باليعر؟", confidence=1.0)
 
         entities = entities or {}
         norm_query = self.normalizer.normalize(raw_query)
@@ -278,7 +278,7 @@ class InferenceEngine:
 
     def _handle_greeting(self, norm_query: str, entities: Dict[str, Any]) -> QueryResult:
         res = (
-            "أهلاً وسهلاً بك في **مساعد مدرسة الرواد النموذجية الذكية**! 🎓\n\n"
+            "أهلاً وسهلاً بك في **مساعد مدرسة النجاح باليعر الذكية**! 🎓\n\n"
             "أنا هنا لمساعدتك في كل ما يخص المدرسة، بما في ذلك:\n"
             "• 📅 **الجداول الدراسية** والحصص لجميع الصفوف.\n"
             "• 👨‍🏫 **بيانات المعلمين**، مكاتبهم، وساعاتهم المكتبية.\n"
@@ -321,7 +321,7 @@ class InferenceEngine:
             fin_phone = phones.get('financial', {}).get('number', '')
 
             res = (
-                f"🏫 **بيانات التواصل والموقع - {overview.get('name', 'مدرسة الرواد')}:**\n\n"
+                f"🏫 **بيانات التواصل والموقع - {overview.get('name', 'مدرسة النجاح باليعر')}:**\n\n"
                 f"📍 **العنوان:** {contact.get('address', '')}\n"
                 f"🗺️ **علامة مميزة:** {contact.get('google_maps_reference', '')}\n"
                 f"📞 **الرقم الرئيسي / الاستقبال:** `{main_phone}`\n"
@@ -346,7 +346,7 @@ class InferenceEngine:
         if any(w in norm_query for w in ['مميزات', 'عن المدرسه', 'نبذه', 'خصائص', 'رويه', 'رساله', 'من انتم']):
             features_list = features.get('features_list', [])
             res = [
-                f"🏫 **{overview.get('name', 'مدرسة الرواد النموذجية الذكية')}**",
+                f"🏫 **{overview.get('name', 'مدرسة النجاح باليعر الذكية')}**",
                 f"• **النوع:** {overview.get('school_type', '')} (سنة التأسيس: {overview.get('established_year', '')})",
                 f"• **الرؤية:** {overview.get('vision', '')}",
                 f"• **الرسالة:** {overview.get('mission', '')}\n",
@@ -358,7 +358,7 @@ class InferenceEngine:
 
         # الرد الإجمالي العام للمدرسة
         res = (
-            f"🏫 **{overview.get('name', 'مدرسة الرواد النموذجية الذكية')}**\n"
+            f"🏫 **{overview.get('name', 'مدرسة النجاح باليعر الذكية')}**\n"
             f"📍 {contact.get('address', '')}\n"
             f"📞 للتواصل: `{contact.get('phones', {}).get('main', {}).get('number', '')}`\n"
             f"⏰ الدوام: {contact.get('working_days', '')} ({contact.get('working_hours', '')})"
@@ -547,7 +547,7 @@ class InferenceEngine:
 
         # 3. إذا كان السؤال عن الأقسام الأكاديمية
         if any(w in norm_query for w in ['اقسام', 'قسم']):
-            lines = ["🏛️ **الأقسام الأكاديمية بمدرسة الرواد:**\n"]
+            lines = ["🏛️ **الأقسام الأكاديمية بمدرسة النجاح باليعر:**\n"]
             for d in departments:
                 head_teacher = self.teachers_by_id.get(d.get('head_of_department_id'), {})
                 lines.append(f"• **{d.get('department_name')}** | رئيس القسم: {head_teacher.get('title', '')} {head_teacher.get('clean_name', 'غير محدد')}")
@@ -827,7 +827,7 @@ class InferenceEngine:
 
         # 1. التحويل من مدرسة أخرى
         if any(w in norm_query for w in ['تحويل', 'نقل', 'محول']):
-            lines = ["🔄 **ضوابط ومعايير تحويل الطلاب إلى مدرسة الرواد:**\n"]
+            lines = ["🔄 **ضوابط ومعايير تحويل الطلاب إلى مدرسة النجاح باليعر:**\n"]
             for r in transfer.get('rules', []):
                 lines.append(f"• **{r.get('title')}:** {r.get('requirement')}")
             return QueryResult(response="\n".join(lines), sources_used=['admission_registration_rules.json'], confidence=0.94)
