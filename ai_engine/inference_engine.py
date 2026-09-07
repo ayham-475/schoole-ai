@@ -62,7 +62,8 @@ class InferenceEngine:
         'attendance_policies.json': 'لائحة وسياسات الحضور والغياب',
         'grading_rules.json': 'لائحة السلوك والانضباط المدرسي',
         'evaluation_policy.json': 'سياسات التقييم وتوزيع الدرجات',
-        'admission_registration_rules.json': 'شروط القبول والتسجيل والتحويل'
+        'admission_registration_rules.json': 'شروط القبول والتسجيل والتحويل',
+        'faq.json': 'الأسئلة الشائعة والمعلومات العامة'
     }
 
     def __init__(self, knowledge_base_path: Optional[Union[str, Path]] = None, kb_path: Optional[Union[str, Path]] = None, **kwargs: Any) -> None:
@@ -105,7 +106,8 @@ class InferenceEngine:
             'attendance_policies.json',
             'grading_rules.json',
             'evaluation_policy.json',
-            'admission_registration_rules.json'
+            'admission_registration_rules.json',
+            'faq.json'
         ]
 
         for fname in json_filenames:
