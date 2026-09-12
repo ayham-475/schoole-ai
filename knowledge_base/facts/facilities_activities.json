@@ -1,137 +1,165 @@
 {
-  "metadata": {
-    "version": "2.0",
-    "last_updated": "2026-08-29",
-    "description": "قاعدة بيانات الأنشطة اللامنهجية، الأندية الطلابية، الرحلات التعليمية والترفيهية، والمسابقات - تدعم البحث الشامل أو الاستعلام عن نشاط فردي محدد"
-  },
-  "search_keywords": ["الأنشطة", "النوادي", "الرحلات", "المسابقات", "الأنشطة المدرسية", "الفعاليات"],
-  "student_clubs": [
+  "facilities": [
     {
-      "club_id": "CLUB_READING_ART",
-      "club_name": "نادي براعم القراءة والفنون",
-      "search_keywords": ["نادي القراءة", "نادي الرسم", "فنون", "براعم", "رسم", "قصص", "نادي براعم القراءة"],
-      "supervisor_teacher_id": "T_105",
-      "supervisor_name": "أ. فاطمة الزهراء",
-      "target_stages": ["المرحلة الأساسية (الابتدائية)"],
-      "target_grades": ["GRADE_01", "GRADE_02", "GRADE_03", "GRADE_04", "GRADE_05", "GRADE_06"],
-      "meeting_schedule": {
-        "day": "الثلاثاء",
-        "start_time": "11:00 صباحاً",
-        "end_time": "12:30 ظهراً"
-      },
-      "location": "المكتبة المركزية",
-      "what_it_offers": "تنمية حب القراءة، تحسين مهارات الإلقاء والخطابة، ورعاية المواهب الفنية في التلوين والرسوم التعبيرية."
+      "facility_id": "FAC_1",
+      "facility_name": "الإدارة",
+      "aliases": [
+        "الإدارة"
+      ],
+      "location_description": "مبنى الطويلة",
+      "category": "مرفق عام",
+      "working_hours": "07:00 - 12:25"
     },
     {
-      "club_id": "CLUB_ROBOTICS",
-      "club_name": "نادي الروبوت والمبتكر الصغير",
-      "search_keywords": ["نادي الروبوت", "روبوتكس", "برمجة للصغار", "ابتكار", "اختراع", "المبتكر الصغير"],
-      "supervisor_teacher_id": "T_104",
-      "supervisor_name": "أ. معاذ عبدالله",
-      "target_stages": ["المرحلة المتوسطة"],
-      "target_grades": ["GRADE_07", "GRADE_08", "GRADE_09"],
-      "meeting_schedule": {
-        "day": "الأربعاء",
-        "start_time": "12:00 ظهراً",
-        "end_time": "01:30 ظهراً"
-      },
-      "location": "معمل الحاسب 2",
-      "what_it_offers": "تركيب وتصميم الروبوتات التعليمية، أساسيات الميكانيكا والبرمجة المبسطة، وتنمية التفكير المنطقي وحل المشكلات."
+      "facility_id": "FAC_2",
+      "facility_name": "مخزن 1",
+      "aliases": [
+        "مخزن 1"
+      ],
+      "location_description": "مبنى الطويلة",
+      "category": "مرفق عام",
+      "working_hours": "07:00 - 12:25"
     },
     {
-      "club_id": "CLUB_AI",
-      "club_name": "نادي الذكاء الاصطناعي والابتكار التقني",
-      "search_keywords": ["نادي الذكاء الاصطناعي", "برمجة", "حاسب", "AI", "تقنية", "الابتكار التقني"],
-      "supervisor_teacher_id": "T_104",
-      "supervisor_name": "أ. معاذ عبدالله",
-      "target_stages": ["المرحلة الثانوية"],
-      "target_grades": ["GRADE_11", "GRADE_12"],
-      "meeting_schedule": {
-        "day": "الخميس",
-        "start_time": "01:00 ظهراً",
-        "end_time": "02:30 ظهراً"
-      },
-      "location": "معمل الحاسب 1",
-      "what_it_offers": "مفاهيم الذكاء الاصطناعي المتقدمة، مشاريع البرمجة بلغة بايثون، وتوظيف التكنولوجيا في حل مشكلات واقعية."
+      "facility_id": "FAC_3",
+      "facility_name": "مخزن 2",
+      "aliases": [
+        "مخزن 2"
+      ],
+      "location_description": "مبنى الطويلة",
+      "category": "مرفق عام",
+      "working_hours": "07:00 - 12:25"
+    },
+    {
+      "facility_id": "FAC_4",
+      "facility_name": "فصول دراسية",
+      "aliases": [
+        "فصول دراسية"
+      ],
+      "location_description": "مبنى الطويلة",
+      "category": "مرفق عام",
+      "working_hours": "07:00 - 12:25"
+    },
+    {
+      "facility_id": "FAC_5",
+      "facility_name": "مكتبة",
+      "aliases": [
+        "مكتبة"
+      ],
+      "location_description": "مبنى اليعر الأعلى",
+      "category": "مرفق عام",
+      "working_hours": "07:00 - 12:25"
+    },
+    {
+      "facility_id": "FAC_6",
+      "facility_name": "إدارة",
+      "aliases": [
+        "إدارة"
+      ],
+      "location_description": "مبنى اليعر الأعلى",
+      "category": "مرفق عام",
+      "working_hours": "07:00 - 12:25"
+    },
+    {
+      "facility_id": "FAC_7",
+      "facility_name": "مخزن تحت الدرج",
+      "aliases": [
+        "مخزن تحت الدرج"
+      ],
+      "location_description": "مبنى اليعر الأعلى",
+      "category": "مرفق عام",
+      "working_hours": "07:00 - 12:25"
+    },
+    {
+      "facility_id": "FAC_8",
+      "facility_name": "فصول دراسية",
+      "aliases": [
+        "فصول دراسية"
+      ],
+      "location_description": "مبنى اليعر الأعلى",
+      "category": "مرفق عام",
+      "working_hours": "07:00 - 12:25"
+    },
+    {
+      "facility_id": "FAC_9",
+      "facility_name": "ملعب كرة قدم سفلي",
+      "aliases": [
+        "ملعب كرة قدم سفلي"
+      ],
+      "location_description": "مبنى اليعر الأعلى",
+      "category": "مرفق عام",
+      "working_hours": "07:00 - 12:25"
+    },
+    {
+      "facility_id": "FAC_10",
+      "facility_name": "ملعب كرة طائرة علوي",
+      "aliases": [
+        "ملعب كرة طائرة علوي"
+      ],
+      "location_description": "مبنى اليعر الأعلى",
+      "category": "مرفق عام",
+      "working_hours": "07:00 - 12:25"
     }
   ],
-  "school_trips": [
-    {
-      "trip_id": "TRIP_ZOO",
-      "title": "رحلة ترفيهية إلى حديقة الحيوان والألعاب",
-      "search_keywords": ["رحلة حديقة الحيوان", "رحلة ترفيهية", "ملاهي", "رحلة الابتدائي", "حديقة الحيوان"],
-      "supervisor_teacher_id": "T_106",
-      "supervisor_name": "أ. سارة أحمد",
-      "target_stages": ["المرحلة الأساسية (الابتدائية)"],
-      "target_grades": ["GRADE_01", "GRADE_02", "GRADE_03"],
-      "trip_date": "2026-10-20",
-      "registration_deadline": "2026-10-15",
-      "what_it_offers": "كسر الروتين الدراسي، قضاء وقت ترفيهي وآمن للطلاب، وتعزيز الروابط الاجتماعية بين الزملاء.",
-      "notes": "رسوم الرحلة 5000 ريال، تشمل وجبة الإفطار والمواصلات. يشترط موافقة ولي الأمر."
-    },
-    {
-      "trip_id": "TRIP_MUSEUM",
-      "title": "الزيارة الاستكشافية للمتحف الوطني",
-      "search_keywords": ["رحلة المتحف", "المتحف الوطني", "رحلة تاريخية", "المتحف"],
-      "supervisor_teacher_id": "T_103",
-      "supervisor_name": "د. سارة إبراهيم الشمري",
-      "target_stages": ["المرحلة الأساسية (الابتدائية)", "المرحلة المتوسطة"],
-      "target_grades": ["GRADE_04", "GRADE_05", "GRADE_06", "GRADE_07", "GRADE_08"],
-      "trip_date": "2026-11-05",
-      "registration_deadline": "2026-10-30",
-      "what_it_offers": "التعرف على تاريخ الوطن والآثار اليمنية، وربط المناهج النظرية (الاجتماعيات) بالتجربة الواقعية الملموسة.",
-      "notes": "زيارة علمية تاريخية لربط المنهج بالواقع مع توفير مرشد سياحي مختص."
-    },
-    {
-      "trip_id": "TRIP_01",
-      "title": "الرحلة العلمية التقنية إلى مركز البحوث",
-      "search_keywords": ["رحلة مركز البحوث", "رحلة علمية", "رحلة الثانوي", "مركز البحوث"],
-      "supervisor_teacher_id": "T_104",
-      "supervisor_name": "أ. معاذ عبدالله",
-      "target_stages": ["المرحلة الثانوية"],
-      "target_grades": ["GRADE_12"],
-      "trip_date": "2026-10-15",
-      "registration_deadline": "2026-10-05",
-      "what_it_offers": "الاطلاع على أحدث التطبيقات البحثية والتكنولوجية، واكتشاف بيئات العمل الأكاديمي والتقني.",
-      "notes": "تشترط موافقة ولي الأمر وتقديم استمارة المشاركة الإلكترونية."
+  "activities": {
+    "sports_and_clubs": [
+      {
+        "activity_name": "نظافة المدرسة",
+        "aliases": [
+          "نظافة المدرسة"
+        ],
+        "description": "نظافة المدرسة"
+      },
+      {
+        "activity_name": "النظافة الشخصية",
+        "aliases": [
+          "النظافة الشخصية"
+        ],
+        "description": "النظافة الشخصية"
+      },
+      {
+        "activity_name": "كرة القدم",
+        "aliases": [
+          "كرة القدم"
+        ],
+        "description": "كرة القدم"
+      },
+      {
+        "activity_name": "كرة الطائرة",
+        "aliases": [
+          "كرة الطائرة"
+        ],
+        "description": "كرة الطائرة"
+      },
+      {
+        "activity_name": "كيرم",
+        "aliases": [
+          "كيرم"
+        ],
+        "description": "كيرم"
+      },
+      {
+        "activity_name": "شطرنج",
+        "aliases": [
+          "شطرنج"
+        ],
+        "description": "شطرنج"
+      }
+    ],
+    "morning_assembly": {
+      "time": "07:00 صباحاً",
+      "program": [
+        "المقدم",
+        "القرآن الكريم",
+        "الحديث",
+        "الكلمة",
+        "لغز",
+        "الأسئلة",
+        "هل تعلم",
+        "الختام",
+        "تحية العلم"
+      ],
+      "responsible": "يحيى بريه"
     }
-  ],
-  "support_competitions": [
-    {
-      "competition_id": "COMP_SPELLING",
-      "title": "مسابقة فرسان الإملاء وحفظ القرآن الكريم",
-      "search_keywords": ["مسابقة القران", "حفظ", "املاء", "فرسان الاملاء", "مسابقة دينية", "مسابقة الإملاء"],
-      "organizing_department_id": "DEP_LANG",
-      "organizing_body": "قسم اللغات والعلوم الإنسانية",
-      "target_stages": ["المرحلة الأساسية (الابتدائية)"],
-      "target_grades": ["GRADE_01", "GRADE_02", "GRADE_03", "GRADE_04", "GRADE_05", "GRADE_06"],
-      "competition_date": "2026-11-15",
-      "registration_deadline": "2026-11-01",
-      "what_it_offers": "تعزيز مهارات الإملاء السليم، العناية بكتاب الله وحفظه، وبث روح التنافس الشريف بين الطلاب."
-    },
-    {
-      "competition_id": "COMP_MENTAL_MATH",
-      "title": "تحدي الخوارزمي للرياضيات الذهنية",
-      "search_keywords": ["حساب ذهني", "مسابقة رياضيات", "تحدي الخوارزمي", "مسابقة المتوسط", "الخوارزمي"],
-      "organizing_department_id": "DEP_MATH",
-      "organizing_body": "قسم الرياضيات والعلوم الطبيعية",
-      "target_stages": ["المرحلة المتوسطة"],
-      "target_grades": ["GRADE_07", "GRADE_08", "GRADE_09"],
-      "competition_date": "2026-12-01",
-      "registration_deadline": "2026-11-20",
-      "what_it_offers": "تطوير سرعة البديهة والمهارات الحسابية المعقدة بدون استخدام الآلة الحاسبة."
-    },
-    {
-      "competition_id": "COMP_01",
-      "title": "الأولمبياد المدرسي الموحد للبرمجة والرياضيات",
-      "search_keywords": ["اولمبياد", "مسابقة برمجة", "مسابقة رياضيات", "اولمبياد البرمجة", "الأولمبياد المدرسي"],
-      "organizing_department_id": "DEP_MATH",
-      "organizing_body": "قسم الرياضيات والعلوم الطبيعية وقسم الحاسوب",
-      "target_stages": ["المرحلة الثانوية"],
-      "target_grades": ["GRADE_11", "GRADE_12"],
-      "competition_date": "2026-12-10",
-      "registration_deadline": "2026-11-25",
-      "what_it_offers": "اكتشاف وتطوير المواهب المتميزة في مجالات الخوارزميات والرياضيات المتقدمة وتأهيلهم للمنافسات الوطنية."
-    }
-  ]
+  }
 }

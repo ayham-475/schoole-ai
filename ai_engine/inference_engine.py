@@ -62,7 +62,8 @@ class InferenceEngine:
         'attendance_policies.json': 'لائحة وسياسات الحضور والغياب',
         'grading_rules.json': 'لائحة السلوك والانضباط المدرسي',
         'evaluation_policy.json': 'سياسات التقييم وتوزيع الدرجات',
-        'admission_registration_rules.json': 'شروط القبول والتسجيل والتحويل'
+        'admission_registration_rules.json': 'شروط القبول والتسجيل والتحويل',
+        'faq.json': 'الأسئلة الشائعة والمعلومات العامة'
     }
 
     def __init__(self, knowledge_base_path: Optional[Union[str, Path]] = None, kb_path: Optional[Union[str, Path]] = None, **kwargs: Any) -> None:
@@ -105,7 +106,8 @@ class InferenceEngine:
             'attendance_policies.json',
             'grading_rules.json',
             'evaluation_policy.json',
-            'admission_registration_rules.json'
+            'admission_registration_rules.json',
+            'faq.json'
         ]
 
         for fname in json_filenames:
@@ -172,7 +174,7 @@ class InferenceEngine:
         """
         raw_query = user_query.strip()
         if not raw_query:
-            return QueryResult(response="مرحباً بك! كيف يمكنني مساعدتك اليوم بخصوص مدرسة الرواد؟", confidence=1.0)
+            return QueryResult(response="مرحباً بك! كيف يمكنني مساعدتك اليوم بخصوص مدرسة النجاح باليعر؟", confidence=1.0)
 
         entities = entities or {}
         norm_query = self.normalizer.normalize(raw_query)
@@ -276,7 +278,7 @@ class InferenceEngine:
 
     def _handle_greeting(self, norm_query: str, entities: Dict[str, Any]) -> QueryResult:
         res = (
-            "أهلاً وسهلاً بك في **مساعد مدرسة الرواد النموذجية الذكية**! 🎓\n\n"
+            "أهلاً وسهلاً بك في **مساعد مدرسة النجاح باليعر الذكية**! 🎓\n\n"
             "أنا هنا لمساعدتك في كل ما يخص المدرسة، بما في ذلك:\n"
             "• 📅 **الجداول الدراسية** والحصص لجميع الصفوف.\n"
             "• 👨‍🏫 **بيانات المعلمين**، مكاتبهم، وساعاتهم المكتبية.\n"
@@ -319,7 +321,7 @@ class InferenceEngine:
             fin_phone = phones.get('financial', {}).get('number', '')
 
             res = (
-                f"🏫 **بيانات التواصل والموقع - {overview.get('name', 'مدرسة الرواد')}:**\n\n"
+                f"🏫 **بيانات التواصل والموقع - {overview.get('name', 'مدرسة النجاح باليعر')}:**\n\n"
                 f"📍 **العنوان:** {contact.get('address', '')}\n"
                 f"🗺️ **علامة مميزة:** {contact.get('google_maps_reference', '')}\n"
                 f"📞 **الرقم الرئيسي / الاستقبال:** `{main_phone}`\n"
@@ -344,7 +346,7 @@ class InferenceEngine:
         if any(w in norm_query for w in ['مميزات', 'عن المدرسه', 'نبذه', 'خصائص', 'رويه', 'رساله', 'من انتم']):
             features_list = features.get('features_list', [])
             res = [
-                f"🏫 **{overview.get('name', 'مدرسة الرواد النموذجية الذكية')}**",
+                f"🏫 **{overview.get('name', 'مدرسة النجاح باليعر الذكية')}**",
                 f"• **النوع:** {overview.get('school_type', '')} (سنة التأسيس: {overview.get('established_year', '')})",
                 f"• **الرؤية:** {overview.get('vision', '')}",
                 f"• **الرسالة:** {overview.get('mission', '')}\n",
@@ -356,7 +358,7 @@ class InferenceEngine:
 
         # الرد الإجمالي العام للمدرسة
         res = (
-            f"🏫 **{overview.get('name', 'مدرسة الرواد النموذجية الذكية')}**\n"
+            f"🏫 **{overview.get('name', 'مدرسة النجاح باليعر الذكية')}**\n"
             f"📍 {contact.get('address', '')}\n"
             f"📞 للتواصل: `{contact.get('phones', {}).get('main', {}).get('number', '')}`\n"
             f"⏰ الدوام: {contact.get('working_days', '')} ({contact.get('working_hours', '')})"
@@ -427,7 +429,7 @@ class InferenceEngine:
                 for p in filtered_periods:
                     period_info = self.periods_by_id.get(p.get('period_id'), {})
                     time_str = f"({period_info.get('start_time')} - {period_info.get('end_time')})" if period_info else ""
-                    teacher_info = self._get_teacher_for_subject(p.get('subject_id'))
+                    teacher_info = p.get('teacher_name') or self._get_teacher_for_subject(p.get('subject_id'))
                     lines.append(f"• **الحصة {p.get('period_id', '').replace('P_', '')}:** {time_str} | 👨‍🏫 المعلم: {teacher_info}")
                 return QueryResult(response="\n".join(lines), sources_used=['schedules_timetable.json', 'teachers_departments.json'], confidence=0.92)
 
@@ -443,7 +445,7 @@ class InferenceEngine:
             sub_name = self._get_subject_name(sub_id)
             period_info = self.periods_by_id.get(pid, {})
             time_str = f"({period_info.get('start_time', '')} - {period_info.get('end_time', '')})" if period_info else ""
-            teacher_name = self._get_teacher_for_subject(sub_id)
+            teacher_name = item.get('teacher_name') or self._get_teacher_for_subject(sub_id)
 
             lines.append(f"• **الحصة {pid.replace('P_', '')}:** {sub_name} {time_str} | 👨‍🏫 {teacher_name}")
 
@@ -545,7 +547,7 @@ class InferenceEngine:
 
         # 3. إذا كان السؤال عن الأقسام الأكاديمية
         if any(w in norm_query for w in ['اقسام', 'قسم']):
-            lines = ["🏛️ **الأقسام الأكاديمية بمدرسة الرواد:**\n"]
+            lines = ["🏛️ **الأقسام الأكاديمية بمدرسة النجاح باليعر:**\n"]
             for d in departments:
                 head_teacher = self.teachers_by_id.get(d.get('head_of_department_id'), {})
                 lines.append(f"• **{d.get('department_name')}** | رئيس القسم: {head_teacher.get('title', '')} {head_teacher.get('clean_name', 'غير محدد')}")
@@ -554,7 +556,11 @@ class InferenceEngine:
         # 4. عرض قائمة المعلمين العامة
         lines = ["👨‍🏫 **قائمة المعلمين المتاحين للاستفسار:**\n"]
         for t in teachers:
-            lines.append(f"• **{t.get('title')} {t.get('clean_name')}** ({t.get('specialization')}) - المواد: {', '.join(t.get('subjects_taught', []))}")
+            subj = t.get('subjects_taught', t.get('taught_subjects', []))
+            spec = t.get('specialization', t.get('department_id', 'عام'))
+            if isinstance(spec, str) and spec.startswith('DEP_'):
+                spec = spec.replace('DEP_', 'قسم ')
+            lines.append(f"• **{t.get('title', 'أ.')} {t.get('clean_name')}** ({spec}) - المواد: {', '.join(subj) if subj else 'غير محدد'}")
         lines.append("\n💡 يمكنك السؤال باسم المعلم أو المادة لمعرفة مواعيد الاستقبال ومكتبه.")
         return QueryResult(response="\n".join(lines), sources_used=['teachers_departments.json'], confidence=0.88)
 
@@ -748,7 +754,8 @@ class InferenceEngine:
                 f"🏆 **شروط الانضمام للوحة الشرف والتكريم:**\n\n"
                 f"• **الحد الأدنى للمعدل:** لا يقل عن `{crit.get('minimum_gpa_percentage', 90)}%`.\n"
                 f"• **تقييم السلوك:** ألا يقل عن `{crit.get('behavior_score_minimum', 'ممتاز')}`.\n"
-                f"• **الرسوب:** {crit.get('no_failed_subjects_condition', 'عدم الرسوب في أي مادة')}."
+                f"• **الغياب بدون عذر:** لا يزيد عن `{crit.get('max_unexcused_absences', 0)}` أيام.\n"
+                f"• **السجل السلوكي:** {crit.get('disciplinary_record', 'خلو السجل من أي مخالفات')}."
             )
             return QueryResult(response=res, sources_used=['evaluation_policy.json'], confidence=0.94)
 
@@ -762,10 +769,12 @@ class InferenceEngine:
         # 3. توزيع الدرجات
         components = dist.get('components', {})
         cw = components.get('course_work', {})
+        op = components.get('oral_and_practical', {})
         wf = components.get('written_final', {})
         res = (
             f"📊 **سياسة تقييم وتوزيع الدرجات:**\n\n"
-            f"• **أعمال السنة والاختبارات الدورية:** `{cw.get('weight_percentage', 50)}%` ({cw.get('description', '')})\n"
+            f"• **أعمال السنة والاختبارات الدورية:** `{cw.get('weight_percentage', 30)}%` ({cw.get('description', '')})\n"
+            f"• **الاختبارات الشفهية والعملية:** `{op.get('weight_percentage', 20)}%` ({op.get('description', '')})\n"
             f"• **الاختبار النهائي التحريري:** `{wf.get('weight_percentage', 50)}%` ({wf.get('description', '')})\n"
             f"• **الحد الأدنى للنجاح:** `{dist.get('passing_threshold', 50)}%` في المادة الواحدة.\n"
             f"📌 {dist.get('passing_note', '')}"
@@ -822,7 +831,7 @@ class InferenceEngine:
 
         # 1. التحويل من مدرسة أخرى
         if any(w in norm_query for w in ['تحويل', 'نقل', 'محول']):
-            lines = ["🔄 **ضوابط ومعايير تحويل الطلاب إلى مدرسة الرواد:**\n"]
+            lines = ["🔄 **ضوابط ومعايير تحويل الطلاب إلى مدرسة النجاح باليعر:**\n"]
             for r in transfer.get('rules', []):
                 lines.append(f"• **{r.get('title')}:** {r.get('requirement')}")
             return QueryResult(response="\n".join(lines), sources_used=['admission_registration_rules.json'], confidence=0.94)
@@ -866,13 +875,10 @@ class InferenceEngine:
             if any(w in norm_query for w in aliases) or any(fuzz.partial_ratio(a, norm_query) >= 80 for a in aliases):
                 matched_f = f
                 break
-            if any(w in norm_query for w in ['حاسوب', 'كمبيوتر', 'معمل', 'حاسب']) and any(k in fname for k in ['حاسوب', 'حاسب', 'ذكاء اصطناعي']):
+            if any(w in norm_query for w in ['عياده', 'طبيب', 'تمريض', 'دكتور', 'العيادة الطبية']) and 'عيادة' in fname:
                 matched_f = f
                 break
-            if any(w in norm_query for w in ['عياده', 'طبيب', 'تمريض', 'دكتور']) and 'عيادة' in fname:
-                matched_f = f
-                break
-            if any(w in norm_query for w in ['مكتبه', 'استعاره', 'قراءه']) and 'مكتبة' in fname:
+            if any(w in norm_query for w in ['مكتبه', 'استعاره', 'قراءه', 'كتب']) and 'مكتبة' in fname:
                 matched_f = f
                 break
 
@@ -919,6 +925,9 @@ class InferenceEngine:
                 matched_count = sum(1 for kw in keywords if kw in norm_val)
                 if matched_count > 0:
                     score = (matched_count / len(keywords)) * 100
+                    # إعطاء أولوية مطلقة لملف الأسئلة الشائعة لأنه يحتوي على السياق الكامل للسؤال والجواب
+                    if source_file == 'faq.json':
+                        score += 50
                     candidates.append((score, val, source_file))
 
         for fname, content in self.kb_data.items():
@@ -936,14 +945,16 @@ class InferenceEngine:
         return None
 
     def _smart_fallback_approximation(self, raw_query: str) -> str:
-        """رسالة بديلة ذكية ولبقة عند عدم العثور على إجابة محددة"""
+        """رسالة بديلة ذكية ولبقة تؤكد التخصص الحصري في شؤون المدرسة والأنظمة التعليمية"""
         return (
-            f"🤖 **عذراً، لم أتمكن من العثور على إجابة دقيقة لاستفسارك:** *\"{raw_query}\"*\n\n"
-            f"💡 **يمكنك تجربة إحدى الصيغ التالية:**\n"
+            f"🤖 **عذراً، أنا مساعد ذكي مخصص حصرياً لشؤون المدرسة والأنظمة التعليمية واللوائح الدراسية:** *\"{raw_query}\"*\n\n"
+            f"لم أتمكن من العثور على إجابة في سجلات ولوائح المدرسة، أو أن الاستفسار يقع خارج اختصاص النظام المدرسي.\n\n"
+            f"💡 **يسعدني جداً مساعدتك في أي استفسار مدرسي، مثل:**\n"
             f"• 📅 *\"جدول ثالث ثانوي يوم الأحد\"* أو *\"متى حصة الرياضيات؟\"*\n"
             f"• 👨‍🏫 *\"من هو معلم الفيزياء؟\"* أو *\"أين مكتب أستاذ أحمد؟\"*\n"
             f"• 📚 *\"ما هي كتب الصف العاشر؟\"*\n"
             f"• 🌴 *\"متى إجازة العيد؟\"* أو *\"مواعيد الاختبارات\"*\n"
             f"• ⚖️ *\"عقوبة الهروب من المدرسة\"* أو *\"قوانين الغياب والأعذار الطبية\"*\n"
+            f"• 🏥 *\"أين تقع العيادة الطبية وما هي مواعيدها؟\"*\n"
             f"• 📝 *\"شروط القبول والتسجيل\"* أو *\"رقم التواصل وموقع المدرسة\"*"
         )

@@ -1,60 +1,81 @@
-import os
-import sys
+import time
 import json
+from django.test import TestCase, Client
 
-# ضبط ترميز الإخراج
-if hasattr(sys.stdout, 'reconfigure'):
-    sys.stdout.reconfigure(encoding='utf-8')
+class SchoolAITestCase(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.expected_keys = ["response", "intent_detected", "confidence_score", "sources"]
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
-import django
-django.setup()
+    def assertValidResponse(self, response):
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        for key in self.expected_keys:
+            self.assertIn(key, data)
 
-from django.test import Client
+    def test_greeting_scenario(self):
+        response = self.client.post('/api/chat/', data=json.dumps({"query": "السلام عليكم ورحمة الله"}), content_type='application/json')
+        self.assertValidResponse(response)
 
-client = Client()
+    def test_location_scenario(self):
+        response = self.client.post('/api/chat/', data=json.dumps({"query": "وين تقع مدرسة الرواد ورقم التواصل؟"}), content_type='application/json')
+        self.assertValidResponse(response)
 
-test_queries = [
-    "السلام عليكم ورحمة الله",
-    "وين تقع مدرسة الرواد ورقم التواصل؟",
-    "متى حصة الرياضيات للصف الثالث الثانوي يوم الأحد؟",
-    "مين هو معلم الفيزياء لثالث ثانوي؟",
-    "ايش هي كتب الصف العاشر؟",
-    "متى تبدا اجازه عيد الفطر؟",
-    "ايش عقوبة الهروب من المدرسة؟",
-    "كم نسبة توزيع درجات النهائي؟",
-    "ابغى اسجل ولدي في المدرسة ايش الشروط؟",
-    "وين معمل الحاسوب؟",
-    "عندي عذر طبي كيف اقدمه وكم مهلة التقديم؟",
-    "ايش شروط الانضمام للوحة الشرف؟"
-]
+    def test_schedule_scenario(self):
+        response = self.client.post('/api/chat/', data=json.dumps({"query": "متى حصة الرياضيات للصف الثالث الثانوي يوم الأحد؟"}), content_type='application/json')
+        self.assertValidResponse(response)
 
-print("=" * 70)
-print("🚀 بدء فحص واختبار كافة سيناريوهات Schoole AI")
-print("=" * 70)
+    def test_teacher_scenario(self):
+        response = self.client.post('/api/chat/', data=json.dumps({"query": "مين هو معلم الفيزياء لثالث ثانوي؟"}), content_type='application/json')
+        self.assertValidResponse(response)
 
-passed = 0
-for idx, q in enumerate(test_queries, 1):
-    response = client.post(
-        '/api/chat/',
-        data=json.dumps({"query": q}),
-        content_type='application/json'
-    )
-    
-    if response.status_code == 200:
-        res_data = response.json()
-        passed += 1
-        intent = res_data.get("intent_detected")
-        conf = int(res_data.get("confidence_score", 0) * 100)
-        sources = res_data.get("sources", [])
-        ans_preview = res_data.get("response", "").replace("\n", " ")[:90]
-        
-        print(f"[{idx}] السؤال: {q}")
-        print(f"   النية: {intent} | نسبة الثقة: {conf}%")
-        print(f"   المصادر: {sources}")
-        print(f"   الرد: {ans_preview}...")
-        print("-" * 70)
-    else:
-        print(f"[{idx}] فشل ({response.status_code}): {q}")
+    def test_curriculum_scenario(self):
+        response = self.client.post('/api/chat/', data=json.dumps({"query": "ايش هي كتب الصف العاشر؟"}), content_type='application/json')
+        self.assertValidResponse(response)
 
-print(f"\n✅ النتيجة النهائية: نجح {passed} من أصل {len(test_queries)} سيناريوهات بنسبة 100%!")
+    def test_calendar_scenario(self):
+        response = self.client.post('/api/chat/', data=json.dumps({"query": "متى تبدا اجازه عيد الفطر؟"}), content_type='application/json')
+        self.assertValidResponse(response)
+
+    def test_discipline_scenario(self):
+        response = self.client.post('/api/chat/', data=json.dumps({"query": "ايش عقوبة الهروب من المدرسة؟"}), content_type='application/json')
+        self.assertValidResponse(response)
+
+    def test_grading_scenario(self):
+        response = self.client.post('/api/chat/', data=json.dumps({"query": "كم نسبة توزيع درجات النهائي؟"}), content_type='application/json')
+        self.assertValidResponse(response)
+
+    def test_admission_scenario(self):
+        response = self.client.post('/api/chat/', data=json.dumps({"query": "ابغى اسجل ولدي في المدرسة ايش الشروط؟"}), content_type='application/json')
+        self.assertValidResponse(response)
+
+    def test_facilities_scenario(self):
+        response = self.client.post('/api/chat/', data=json.dumps({"query": "وين العيادة الطبية المدرسية وما هي مواعيدها؟"}), content_type='application/json')
+        self.assertValidResponse(response)
+
+    def test_attendance_scenario(self):
+        response = self.client.post('/api/chat/', data=json.dumps({"query": "عندي عذر طبي كيف اقدمه وكم مهلة التقديم؟"}), content_type='application/json')
+        self.assertValidResponse(response)
+
+    def test_honor_roll_scenario(self):
+        response = self.client.post('/api/chat/', data=json.dumps({"query": "ايش شروط الانضمام للوحة الشرف؟"}), content_type='application/json')
+        self.assertValidResponse(response)
+
+    def test_out_of_scope_scenario(self):
+        response = self.client.post('/api/chat/', data=json.dumps({"query": "كيف أطبخ كبسة دجاج في البيت؟"}), content_type='application/json')
+        self.assertValidResponse(response)
+
+    def test_performance(self):
+        start_time = time.time()
+        response = self.client.post('/api/chat/', data=json.dumps({"query": "السلام عليكم"}), content_type='application/json')
+        end_time = time.time()
+        self.assertLess(end_time - start_time, 2.0, "Response took longer than 2 seconds")
+        self.assertValidResponse(response)
+
+    def test_feedback_endpoint(self):
+        response = self.client.post('/api/feedback/', data=json.dumps({"rating": 5, "comment": "Great!"}), content_type='application/json')
+        self.assertIn(response.status_code, [200, 201])
+
+    def test_stats_endpoint(self):
+        response = self.client.get('/api/stats/')
+        self.assertEqual(response.status_code, 200)
