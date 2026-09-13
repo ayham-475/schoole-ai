@@ -218,8 +218,12 @@ def stats_view(request):
 
 
 # ======================================
-# الصفحة الرئيسية
+# الصفحة الرئيسية ولوحة التحكم
 # ======================================
 def home_view(request):
     """عرض الواجهة التفاعلية الرئيسية للمساعد الذكي."""
     return render(request, 'index.html')
+
+def dashboard_view(request):
+    """عرض لوحة التحكم والإحصائيات الخاصة بالإدارة."""
+    return render(request, 'dashboard.html')
