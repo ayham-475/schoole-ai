@@ -983,8 +983,14 @@
                             
                             // 🔊 Read aloud if enabled
                             if (isReadAloudEnabled) {
-                                // Strip HTML tags and emojis for cleaner reading
-                                let textToRead = data.response.replace(/<[^>]*>?/gm, '');
+                                // تنظيف النص من الـ HTML، الإيموجي، ورموز الماركداون لقراءة صوتية نقية
+                                let textToRead = data.response
+                                    .replace(/<[^>]*>?/gm, ' ') // إزالة HTML
+                                    .replace(/[\u{1F300}-\u{1F9FF}\u{2700}-\u{27BF}\u{2600}-\u{26FF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}]/gu, '') // إزالة الإيموجي
+                                    .replace(/[#*•_|\-`~]/g, '') // إزالة رموز الماركداون والقوائم
+                                    .replace(/\s+/g, ' ') // توحيد المسافات
+                                    .trim();
+                                    
                                 const utterance = new SpeechSynthesisUtterance(textToRead);
                                 utterance.lang = 'ar-SA';
                                 utterance.rate = 0.95; // Slightly slower for better Arabic pronunciation
