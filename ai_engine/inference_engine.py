@@ -512,7 +512,8 @@ class InferenceEngine:
         if not target_teacher:
             subject = entities.get('subject', '')
             for t in teachers:
-                for s in t.get('subjects_taught', []):
+                subj_list = t.get('subjects_taught', t.get('taught_subjects', []))
+                for s in subj_list:
                     if subject and (subject in s or s in subject):
                         target_teacher = t
                         break
