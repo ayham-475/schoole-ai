@@ -501,8 +501,9 @@ class InferenceEngine:
                 if teacher_name and (teacher_name in t.get('clean_name', '') or t.get('clean_name', '') in teacher_name):
                     target_teacher = t
                     break
-                for kw in t.get('search_keywords', []):
-                    if kw in norm_query:
+                keywords_to_check = t.get('search_keywords', []) + t.get('aliases', [])
+                for kw in keywords_to_check:
+                    if kw and kw in norm_query:
                         target_teacher = t
                         break
                 if target_teacher:
@@ -534,14 +535,18 @@ class InferenceEngine:
                 hours_lines.append(f"  • يوم {day_ar}: من {h.get('start_time')} إلى {h.get('end_time')} (📍 {h.get('location_name')})")
 
             hours_str = "\n".join(hours_lines) if hours_lines else "  • بالتنسيق المسبق مع إدارة القسم."
+            
+            subj_list = target_teacher.get('subjects_taught', target_teacher.get('taught_subjects', []))
+            spec = target_teacher.get('specialization') or "معلم عام"
+            email = target_teacher.get('contact', {}).get('email', 'غير متوفر')
 
             res = (
                 f"👨‍🏫 **بيانات المعلم:**\n\n"
-                f"• **الاسم:** {target_teacher.get('title')} {target_teacher.get('clean_name')}\n"
+                f"• **الاسم:** {target_teacher.get('title', 'أ.')} {target_teacher.get('clean_name', '')}\n"
                 f"• **القسم الأكاديمي:** {dep_name}\n"
-                f"• **التخصص:** {target_teacher.get('specialization')}\n"
-                f"• **المواد التي يدرسها:** {', '.join(target_teacher.get('subjects_taught', []))}\n"
-                f"• **البريد الإلكتروني:** `{target_teacher.get('contact', {}).get('email', '')}`\n\n"
+                f"• **التخصص:** {spec}\n"
+                f"• **المواد التي يدرسها:** {', '.join(subj_list) if subj_list else 'غير محدد'}\n"
+                f"• **البريد الإلكتروني:** `{email}`\n\n"
                 f"⏰ **الساعات المكتبية والاستقبال:**\n{hours_str}"
             )
             return QueryResult(response=res, sources_used=['teachers_departments.json'], confidence=0.94)
