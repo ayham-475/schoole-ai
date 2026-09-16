@@ -184,10 +184,65 @@
                 </div>
             </div>
 
+            <!-- أداة التوزيع الذكي (Greedy Algorithm) -->
+            <div class="chart-card" style="margin-top: 20px;">
+                <h3>🧠 أداة التوزيع الذكي للمعلمين (الخوارزمية الجشعة - Set Cover)</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">
+                    اختر المواد التي تحتاج لتغطيتها، وسيقوم الذكاء الاصطناعي بحساب أقل عدد ممكن من المعلمين المطلوبين لتغطية هذه المواد.
+                </p>
+                <div style="margin-top: 15px;">
+                    <label><input type="checkbox" class="subject-cb" value="الرياضيات"> الرياضيات</label>
+                    <label><input type="checkbox" class="subject-cb" value="الفيزياء"> الفيزياء</label>
+                    <label><input type="checkbox" class="subject-cb" value="الكيمياء"> الكيمياء</label>
+                    <label><input type="checkbox" class="subject-cb" value="الأحياء"> الأحياء</label>
+                    <label><input type="checkbox" class="subject-cb" value="اللغة العربية"> اللغة العربية</label>
+                    <label><input type="checkbox" class="subject-cb" value="اللغة الإنجليزية"> اللغة الإنجليزية</label>
+                    <label><input type="checkbox" class="subject-cb" value="التربية الإسلامية"> التربية الإسلامية</label>
+                    <label><input type="checkbox" class="subject-cb" value="الحاسب الآلي والذكاء الاصطناعي"> الحاسب والذكاء الاصطناعي</label>
+                    <button onclick="runOptimization()" style="margin-right: 15px; padding: 8px 16px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer;">احسب التغطية</button>
+                </div>
+                <div id="optimization-result" style="margin-top: 20px; padding: 15px; background: #f1f5f9; border-radius: 8px; display: none;">
+                    <h4>نتائج خوارزمية البحث:</h4>
+                    <pre id="optimization-logs" style="white-space: pre-wrap; font-family: inherit; font-size: 0.95rem;"></pre>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script>
+        async function runOptimization() {
+            const checkboxes = document.querySelectorAll('.subject-cb:checked');
+            const subjects = Array.from(checkboxes).map(cb => cb.value);
+            
+            if(subjects.length === 0) {
+                alert("يرجى اختيار مادة واحدة على الأقل.");
+                return;
+            }
+
+            const resultDiv = document.getElementById('optimization-result');
+            const logsPre = document.getElementById('optimization-logs');
+            resultDiv.style.display = 'block';
+            logsPre.textContent = "جاري معالجة الخوارزمية الجشعة... ⏳";
+
+            try {
+                const response = await fetch('/api/optimize/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ subjects: subjects })
+                });
+                const data = await response.json();
+                
+                if (data.error) {
+                    logsPre.textContent = "❌ خطأ: " + data.error;
+                    return;
+                }
+
+                logsPre.innerHTML = data.logs.join('<br><br>');
+            } catch (error) {
+                logsPre.textContent = "❌ حدث خطأ في الاتصال بالخادم.";
+            }
+        }
         async function fetchStats() {
             try {
                 const response = await fetch('/api/stats/');

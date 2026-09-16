@@ -964,3 +964,67 @@ class InferenceEngine:
             f"• 🏥 *\"أين تقع العيادة الطبية وما هي مواعيدها؟\"*\n"
             f"• 📝 *\"شروط القبول والتسجيل\"* أو *\"رقم التواصل وموقع المدرسة\"*"
         )
+
+    # ---------------------------------------------------------
+    # خوارزمية التحسين (Greedy Set Cover Algorithm)
+    # ---------------------------------------------------------
+    def run_greedy_set_cover(self, requested_subjects: List[str]) -> Dict[str, Any]:
+        """
+        تطبيق الخوارزمية الجشعة (Greedy Best-First Search) 
+        لإيجاد الحد الأدنى من المعلمين لتغطية مجموعة من المواد.
+        """
+        td_data = self.kb_data.get('teachers_departments.json', {})
+        teachers = td_data.get('teachers', [])
+        
+        # تجهيز بيانات المعلمين والمواد التي يدرسونها
+        teacher_pool = []
+        for t in teachers:
+            subj_list = t.get('subjects_taught', t.get('taught_subjects', []))
+            if subj_list:
+                teacher_pool.append({
+                    'name': t.get('clean_name'),
+                    'title': t.get('title'),
+                    'subjects': set(subj_list)
+                })
+
+        uncovered_subjects = set(requested_subjects)
+        selected_teachers = []
+        logs = []
+        step = 1
+
+        logs.append(f"🎯 **الهدف:** تغطية المواد التالية: {', '.join(uncovered_subjects)}")
+
+        while uncovered_subjects:
+            best_teacher = None
+            best_cover = set()
+
+            # القرار الجشع (Greedy Choice)
+            for teacher in teacher_pool:
+                covered = teacher['subjects'].intersection(uncovered_subjects)
+                if len(covered) > len(best_cover):
+                    best_teacher = teacher
+                    best_cover = covered
+
+            if not best_teacher:
+                logs.append(f"⚠️ **فشل:** لا يوجد معلمون إضافيون لتغطية المواد المتبقية: {', '.join(uncovered_subjects)}")
+                break
+
+            selected_teachers.append({
+                'name': f"{best_teacher['title']} {best_teacher['name']}",
+                'covered_subjects': list(best_cover)
+            })
+            uncovered_subjects -= best_cover
+            
+            logs.append(f"✅ **الخطوة {step}:** تم اختيار **{best_teacher['name']}** لتغطية ({', '.join(best_cover)}).")
+            if uncovered_subjects:
+                logs.append(f"   المواد المتبقية: {', '.join(uncovered_subjects)}")
+            else:
+                logs.append(f"🎉 **النتيجة:** تم تغطية جميع المواد بنجاح!")
+            step += 1
+
+        return {
+            'selected_teachers': selected_teachers,
+            'logs': logs,
+            'success': len(uncovered_subjects) == 0,
+            'missing_subjects': list(uncovered_subjects)
+        }
