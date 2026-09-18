@@ -231,43 +231,45 @@ class InferenceEngine:
 
     def _keyword_routing(self, norm_query: str, entities: Dict[str, Any]) -> Optional[QueryResult]:
         """توجيه ذكي بالاعتماد على الكلمات الصريحة في حال فشل تصنيف النية"""
-        if any(w in norm_query for w in ['جدول', 'حصه', 'حصص']) or entities.get('day'):
+        norm_tokens = set(norm_query.split())
+        
+        if any(w in norm_tokens for w in ['جدول', 'حصه', 'حصص']) or entities.get('day'):
             return self._handle_schedule(norm_query, entities)
 
-        if any(w in norm_query for w in ['استاذ', 'معلم', 'مدرس', 'مكتب', 'ساعات مكتبيه']):
+        if any(w in norm_tokens for w in ['استاذ', 'معلم', 'مدرس', 'مكتب', 'مكتبيه']):
             return self._handle_teacher(norm_query, entities)
 
-        if any(w in norm_query for w in ['كتاب', 'كتب', 'منهج', 'مقرر']):
+        if any(w in norm_tokens for w in ['كتاب', 'كتب', 'منهج', 'مقرر']):
             return self._handle_curriculum(norm_query, entities)
 
-        if any(w in norm_query for w in ['اجازه', 'عطله', 'عيد', 'تقويم']):
+        if any(w in norm_tokens for w in ['اجازه', 'عطله', 'عيد', 'تقويم']):
             return self._handle_calendar(norm_query, entities)
 
-        if any(w in norm_query for w in ['امتحان', 'امتحانات', 'اختبار', 'اختبارات']):
+        if any(w in norm_tokens for w in ['امتحان', 'امتحانات', 'اختبار', 'اختبارات']):
             return self._handle_exams(norm_query, entities)
 
-        if any(w in norm_query for w in ['نادي', 'انديه', 'رحله', 'رحلات']):
+        if any(w in norm_tokens for w in ['نادي', 'انديه', 'رحله', 'رحلات']):
             return self._handle_activities(norm_query, entities)
 
-        if any(w in norm_query for w in ['مسابقه', 'مسابقات', 'اولمبياد']):
+        if any(w in norm_tokens for w in ['مسابقه', 'مسابقات', 'اولمبياد']):
             return self._handle_competitions(norm_query, entities)
 
-        if any(w in norm_query for w in ['غياب', 'عذر', 'طبي', 'انذار غياب']):
+        if any(w in norm_tokens for w in ['غياب', 'عذر', 'طبي', 'انذار', 'حرمان']):
             return self._handle_attendance(norm_query, entities)
 
-        if any(w in norm_query for w in ['درجات', 'توزيع الدرجات', 'رسوب', 'دور ثاني', 'لوحه الشرف']):
+        if any(w in norm_tokens for w in ['درجات', 'توزيع', 'رسوب', 'دور', 'لوحه', 'شرف']):
             return self._handle_grading(norm_query, entities)
 
-        if any(w in norm_query for w in ['مخالفه', 'عقوبه', 'هروب', 'هرب', 'سلوك', 'فصل']):
+        if any(w in norm_tokens for w in ['مخالفه', 'عقوبه', 'هروب', 'هرب', 'سلوك', 'فصل']):
             return self._handle_discipline(norm_query, entities)
 
-        if any(w in norm_query for w in ['قبول', 'تسجيل', 'شروط القبول', 'تحويل', 'اوراق التسجيل']):
+        if any(w in norm_tokens for w in ['قبول', 'تسجيل', 'شروط', 'تحويل', 'اوراق']):
             return self._handle_admission(norm_query, entities)
 
-        if any(w in norm_query for w in ['موقع', 'عنوان', 'رقم', 'هاتف', 'تواصل', 'مدير', 'دوام', 'باصات', 'مقصف']):
+        if any(w in norm_tokens for w in ['موقع', 'عنوان', 'رقم', 'هاتف', 'تواصل', 'مدير', 'دوام', 'باصات', 'مقصف']):
             return self._handle_school_info(norm_query, entities)
 
-        if any(w in norm_query for w in ['مكتبه', 'معمل', 'مختبر', 'عياده', 'مسرح']):
+        if any(w in norm_tokens for w in ['مكتبه', 'معمل', 'مختبر', 'عياده', 'مسرح']):
             return self._handle_facilities(norm_query, entities)
 
         return None

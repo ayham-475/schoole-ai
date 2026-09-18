@@ -173,8 +173,9 @@ class NLPProcessor:
         """
         if not normalized_text:
             return NLPResult(intent=Intent.UNKNOWN.value, confidence=0.0)
-
+# استدعاء خوارزمية التصنيف لتحديد نية السؤال ودرجة وزن المطابقة المحسوبة لها.
         intent, intent_score = self._classify_intent(normalized_text)
+        # entities: استدعاء محرك استخراج الكيانات لسحب التفاصيل الهيكلية (مثل اسم المعلم، المادة، اليوم، الشعبة).
         entities = self._extract_entities(normalized_text)
 
         # حساب الثقة الواقعية

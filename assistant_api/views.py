@@ -27,14 +27,14 @@ inference_engine = InferenceEngine(knowledge_base_path="knowledge_base")
 response_generator = ResponseGenerator()
 
 # ======================================
-# نظام تحديد المعدل (Rate Limiting)
+# نظpip install djangoام تحديد المعدل (Rate Limiting)
 # ======================================
 _rate_limit_cache = defaultdict(list)
 RATE_LIMIT_MAX = 30       # الحد الأقصى للطلبات
 RATE_LIMIT_WINDOW = 60    # نافذة الوقت بالثواني
 
 
-def _check_rate_limit(ip: str) -> bool:
+def  _check_rate_limit(ip: str) -> bool:
     """التحقق مما إذا كان العميل قد تجاوز الحد الأقصى للطلبات."""
     now = time.time()
     _rate_limit_cache[ip] = [t for t in _rate_limit_cache[ip] if now - t < RATE_LIMIT_WINDOW]
@@ -82,7 +82,7 @@ def chat_view(request):
 
         logger.info(f"New query from {client_ip}: {user_query[:80]}...")
 
-        # 1. تنظيف وتوحيد النص ودعم العامية
+        # 1. تنظيف وتوحيد النص ودعم العامية 
         normalized_text = normalizer.normalize(user_query)
 
         # 2. استخراج النية والكيانات
@@ -112,8 +112,7 @@ def chat_view(request):
         calc_confidence = round(
             max(nlp_result.confidence, getattr(inference_result, 'confidence', 0.8)), 2
         )
-
-        # 7. حساب زمن الاستجابة
+                # 7. حساب زمن الاستجابة
         response_time_ms = int((time.time() - start_time) * 1000)
 
         # 8. حفظ المحادثة في قاعدة البيانات للإحصاء والتحسين
