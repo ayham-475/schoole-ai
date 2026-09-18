@@ -515,17 +515,33 @@ class InferenceEngine:
 
         if not target_teacher:
             teacher_name = entities.get('teacher_name', '')
+            
+            # محاولة 1: تطابق دقيق مع الاسم الكامل (Clean Name)
             for t in teachers:
-                if teacher_name and (teacher_name in t.get('clean_name', '') or t.get('clean_name', '') in teacher_name):
+                clean_name = t.get('clean_name', '')
+                if teacher_name and (teacher_name == clean_name or clean_name in norm_query):
                     target_teacher = t
                     break
-                keywords_to_check = t.get('search_keywords', []) + t.get('aliases', [])
-                for kw in keywords_to_check:
-                    if kw and kw in norm_query:
-                        target_teacher = t
+            
+            # محاولة 2: تطابق مع الأسماء البديلة ككلمات مستقلة
+            if not target_teacher:
+                words_in_query = norm_query.split()
+                for t in teachers:
+                    keywords_to_check = t.get('search_keywords', []) + t.get('aliases', [])
+                    for kw in keywords_to_check:
+                        if not kw: continue
+                        # إذا كان الاسم البديل كلمة واحدة، يجب أن تتطابق ككلمة مستقلة
+                        if ' ' not in kw:
+                            if kw in words_in_query:
+                                target_teacher = t
+                                break
+                        else:
+                            # إذا كان الاسم البديل مركباً، نكتفي بوجوده في النص
+                            if kw in norm_query:
+                                target_teacher = t
+                                break
+                    if target_teacher:
                         break
-                if target_teacher:
-                    break
 
         # 2. إذا لم يُحدد بالاسم، فالبحث بالمادة (مثل: مين يدرس رياضيات أو فيزياء)
         if not target_teacher:
@@ -557,6 +573,48 @@ class InferenceEngine:
             subj_list = target_teacher.get('subjects_taught', target_teacher.get('taught_subjects', []))
             spec = target_teacher.get('specialization') or "معلم عام"
             email = target_teacher.get('contact', {}).get('email', 'غير متوفر')
+            
+            # --- جديد: استخراج جدول المعلم من ملف الجداول ---
+            teacher_schedule_lines = []
+            try:
+                timetable_data = self.kb_data.get('schedules_timetable.json', {})
+                weekly_schedules = timetable_data.get('weekly_schedules', [])
+                
+                # تحديد اليوم المطلوب أو اليوم الحالي
+                target_day = entities.get('day')
+                if not target_day:
+                    target_day = next((en for ar, en in self.DAY_MAP_AR_EN.items() if ar in norm_query), 'Sunday')
+                day_name_ar = self.DAY_MAP_EN_AR.get(target_day, target_day)
+                
+                t_name = target_teacher.get('clean_name', '')
+                t_aliases = target_teacher.get('aliases', []) + [t_name]
+                
+                for grade in weekly_schedules:
+                    g_name = grade.get('grade_name', '')
+                    for cls in grade.get('classes', []):
+                        c_name = cls.get('class_name', '')
+                        day_schedule = cls.get('schedule', {}).get(target_day, [])
+                        for lesson in day_schedule:
+                            l_teacher = lesson.get('teacher_name', '')
+                            # مطابقة أدق: يجب أن يكون الاسم الكامل متطابقاً، أو الاسم في الجدول متطابقاً تماماً مع أحد الأسماء البديلة
+                            is_match = False
+                            if t_name and (t_name in l_teacher or l_teacher in t_name):
+                                is_match = True
+                            elif any(alias == l_teacher or alias == l_teacher.split()[0] for alias in t_aliases if alias):
+                                is_match = True
+                                
+                            if is_match:
+                                p_id = lesson.get('period_id', '')
+                                p_name = p_id.replace('P_0', 'الحصة ').replace('P_', 'الحصة ')
+                                subj = lesson.get('subject', '')
+                                teacher_schedule_lines.append(f"  • {p_name}: {subj} ({g_name} - {c_name})")
+                
+                if teacher_schedule_lines:
+                    teacher_schedule_str = f"📅 **أين يتواجد اليوم ({day_name_ar})؟**\n" + "\n".join(teacher_schedule_lines)
+                else:
+                    teacher_schedule_str = f"📅 **أين يتواجد اليوم ({day_name_ar})؟**\n  • ليس لديه حصص مسجلة في هذا اليوم، يتواجد في مبنى الإدارة أو غرفة المعلمين."
+            except Exception as e:
+                teacher_schedule_str = ""
 
             res = (
                 f"👨‍🏫 **بيانات المعلم:**\n\n"
@@ -565,9 +623,10 @@ class InferenceEngine:
                 f"• **التخصص:** {spec}\n"
                 f"• **المواد التي يدرسها:** {', '.join(subj_list) if subj_list else 'غير محدد'}\n"
                 f"• **البريد الإلكتروني:** `{email}`\n\n"
+                f"{teacher_schedule_str}\n\n"
                 f"⏰ **الساعات المكتبية والاستقبال:**\n{hours_str}"
             )
-            return QueryResult(response=res, sources_used=['teachers_departments.json'], confidence=0.94)
+            return QueryResult(response=res, sources_used=['teachers_departments.json', 'schedules_timetable.json'], confidence=0.96)
 
         # 3. إذا كان السؤال عن الأقسام الأكاديمية
         if any(w in norm_query for w in ['اقسام', 'قسم']):
