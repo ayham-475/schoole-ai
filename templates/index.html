@@ -487,6 +487,38 @@
         .send-btn:active { transform: scale(0.96); }
         .send-btn svg { width: 22px; height: 22px; transform: rotate(180deg); fill: currentColor; }
 
+        .mic-btn {
+            background: var(--bg-chat);
+            color: var(--text-dark);
+            border: 1px solid var(--chip-border);
+            width: 50px;
+            height: 50px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            font-size: 1.3rem;
+            align-self: center;
+        }
+        .mic-btn:hover {
+            background: var(--chip-bg);
+            border-color: var(--primary-light);
+        }
+        .mic-btn.recording {
+            background: #ef4444;
+            color: #fff;
+            border-color: #ef4444;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
         .char-count {
             font-size: 0.75rem;
             color: #10b981;
@@ -544,6 +576,7 @@
                 </div>
             </div>
             <div class="header-actions">
+                <button onclick="toggleSpeechRead()" id="readAloudIcon" title="قراءة الردود صوتياً">🔊</button>
                 <button onclick="toggleSearch()" title="بحث">🔍</button>
                 <button onclick="toggleDarkMode()" id="themeIcon" title="تغيير المظهر">🌙</button>
                 <button onclick="clearChat()" title="مسح المحادثة">🗑️</button>
@@ -558,7 +591,7 @@
         <!-- Quick Suggestions -->
         <div class="quick-suggestions">
             <div class="chip" onclick="askQuick('جدول ثالث ثانوي يوم الأحد')">📅 جدول ثالث ثانوي</div>
-            <div class="chip" onclick="askQuick('من هو معلم الفيزياء لثالث ثانوي؟')">👨‍🏫 معلمين </div>
+            <div class="chip" onclick="askQuick('من هم المعلمون في المدرسة؟')">👨‍🏫 قائمة المعلمين</div>
             <div class="chip" onclick="askQuick('ما هي كتب الصف العاشر؟')">📚 كتب الصف العاشر</div>
             <div class="chip" onclick="askQuick('متى إجازة عيد الفطر؟')">🌴 إجازة العيد</div>
             <div class="chip" onclick="askQuick('ما هي شروط تسجيل طالب جديد؟')">📝 شروط القبول</div>
@@ -587,6 +620,9 @@
                         maxlength="500"
                     >
                 </div>
+                <button class="mic-btn" id="micBtn" onclick="toggleRecording()" title="تحدث بالصوت">
+                    🎤
+                </button>
                 <button class="send-btn" onclick="sendMessage()" title="إرسال">
                     <svg viewBox="0 0 24 24">
                         <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
@@ -762,6 +798,68 @@
             return html;
         }
 
+        // --- Voice Features (Speech-to-Text / Text-to-Speech) ---
+        let isReadAloudEnabled = false;
+        
+        function toggleSpeechRead() {
+            isReadAloudEnabled = !isReadAloudEnabled;
+            const icon = document.getElementById('readAloudIcon');
+            icon.textContent = isReadAloudEnabled ? '🔈' : '🔊';
+            showToast(isReadAloudEnabled ? "تم تفعيل القراءة الصوتية ✅" : "تم إيقاف القراءة الصوتية ❌");
+            if (!isReadAloudEnabled) {
+                window.speechSynthesis.cancel();
+            }
+        }
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition = null;
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.lang = 'ar-SA';
+            recognition.interimResults = false;
+            
+            recognition.onstart = function() {
+                document.getElementById('micBtn').classList.add('recording');
+                document.getElementById('queryInput').placeholder = "جاري الاستماع... 🎤";
+            };
+            
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById('queryInput').value = transcript;
+                updateCharCount();
+                sendMessage(); // إرسال تلقائي بعد الاستماع
+            };
+            
+            recognition.onerror = function(event) {
+                showToast("حدث خطأ في الميكروفون: " + event.error);
+                stopRecording();
+            };
+            
+            recognition.onend = function() {
+                stopRecording();
+            };
+        } else {
+            console.warn("Speech Recognition not supported in this browser.");
+            document.getElementById('micBtn').style.display = 'none';
+        }
+
+        function toggleRecording() {
+            if (!recognition) {
+                showToast("متصفحك لا يدعم الإدخال الصوتي");
+                return;
+            }
+            if (document.getElementById('micBtn').classList.contains('recording')) {
+                recognition.stop();
+            } else {
+                recognition.start();
+            }
+        }
+        
+        function stopRecording() {
+            document.getElementById('micBtn').classList.remove('recording');
+            document.getElementById('queryInput').placeholder = "اكتب استفسارك هنا...";
+        }
+
         function askQuick(text) {
             const input = document.getElementById("queryInput");
             input.value = text;
@@ -882,6 +980,22 @@
                             // When finished typing, show metadata and feedback buttons
                             bubbleDiv.insertAdjacentHTML('beforeend', metaHtml + feedbackHtml);
                             chatBox.scrollTop = chatBox.scrollHeight;
+                            
+                            // 🔊 Read aloud if enabled
+                            if (isReadAloudEnabled) {
+                                // تنظيف النص من الـ HTML، الإيموجي، ورموز الماركداون لقراءة صوتية نقية
+                                let textToRead = data.response
+                                    .replace(/<[^>]*>?/gm, ' ') // إزالة HTML
+                                    .replace(/[\u{1F300}-\u{1F9FF}\u{2700}-\u{27BF}\u{2600}-\u{26FF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}]/gu, '') // إزالة الإيموجي
+                                    .replace(/[#*•_|\-`~]/g, '') // إزالة رموز الماركداون والقوائم
+                                    .replace(/\s+/g, ' ') // توحيد المسافات
+                                    .trim();
+                                    
+                                const utterance = new SpeechSynthesisUtterance(textToRead);
+                                utterance.lang = 'ar-SA';
+                                utterance.rate = 0.95; // Slightly slower for better Arabic pronunciation
+                                window.speechSynthesis.speak(utterance);
+                            }
                         }
                     }
                     

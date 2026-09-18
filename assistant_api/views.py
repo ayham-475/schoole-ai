@@ -217,8 +217,35 @@ def stats_view(request):
 
 
 # ======================================
-# الصفحة الرئيسية
+# الصفحة الرئيسية ولوحة التحكم
 # ======================================
 def home_view(request):
     """عرض الواجهة التفاعلية الرئيسية للمساعد الذكي."""
     return render(request, 'index.html')
+
+def dashboard_view(request):
+    """عرض لوحة التحكم والإحصائيات الخاصة بالإدارة."""
+    return render(request, 'dashboard.html')
+
+# ======================================
+# نقطة النهاية: خوارزمية التوزيع (Greedy Set Cover)
+# ======================================
+@csrf_exempt
+@require_POST
+def optimize_teachers_view(request):
+    """استقبال قائمة بالمواد، وتشغيل الخوارزمية الجشعة لإيجاد أقل عدد من المعلمين لتغطيتها."""
+    try:
+        data = json.loads(request.body)
+        requested_subjects = data.get('subjects', [])
+        
+        if not requested_subjects:
+            return JsonResponse({'error': 'قائمة المواد فارغة.'}, status=400)
+            
+        result = inference_engine.run_greedy_set_cover(requested_subjects)
+        return JsonResponse(result, status=200)
+        
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'صيغة JSON غير صالحة.'}, status=400)
+    except Exception as e:
+        logger.error(f"Optimization error: {e}", exc_info=True)
+        return JsonResponse({'error': str(e)}, status=500)
