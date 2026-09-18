@@ -381,14 +381,32 @@ class InferenceEngine:
         # تحديد الصف المستهدف
         target_grade_id = entities.get('grade_id')
         if not target_grade_id:
-            if any(w in norm_query for w in ['ثالث', '12', 'ثاني عشر']):
+            if any(w in norm_query for w in ['ثالث ثانوي', 'ثالث ثنوي', '12', 'ثاني عشر']):
                 target_grade_id = 'GRADE_12'
-            elif any(w in norm_query for w in ['اول', '10', 'عاشر']):
-                target_grade_id = 'GRADE_10'
-            elif any(w in norm_query for w in ['ثاني ثانوي', '11', 'حادي عشر']):
+            elif any(w in norm_query for w in ['ثاني ثانوي', 'ثاني ثنوي', '11', 'حادي عشر']):
                 target_grade_id = 'GRADE_11'
+            elif any(w in norm_query for w in ['اول ثانوي', 'اول ثنوي', '10', 'عاشر']):
+                target_grade_id = 'GRADE_10'
+            elif any(w in norm_query for w in ['تاسع', '9']):
+                target_grade_id = 'GRADE_9'
+            elif any(w in norm_query for w in ['ثامن', '8']):
+                target_grade_id = 'GRADE_8'
+            elif any(w in norm_query for w in ['سابع', '7']):
+                target_grade_id = 'GRADE_7'
+            elif any(w in norm_query for w in ['سادس', '6']):
+                target_grade_id = 'GRADE_6'
+            elif any(w in norm_query for w in ['خامس', '5']):
+                target_grade_id = 'GRADE_5'
+            elif any(w in norm_query for w in ['رابع', '4']):
+                target_grade_id = 'GRADE_4'
+            elif any(w in norm_query for w in ['ثالث', '3']):
+                target_grade_id = 'GRADE_3'
+            elif any(w in norm_query for w in ['ثاني', '2']):
+                target_grade_id = 'GRADE_2'
+            elif any(w in norm_query for w in ['اول', '1']):
+                target_grade_id = 'GRADE_1'
             else:
-                target_grade_id = 'GRADE_12'  # الافتراضي
+                target_grade_id = 'GRADE_12'  # الافتراضي إذا لم يتم ذكره
 
         # البحث عن الصف
         selected_grade = next((g for g in weekly_schedules if g.get('grade_id') == target_grade_id), weekly_schedules[0])
@@ -577,6 +595,32 @@ class InferenceEngine:
             return None
 
         target_grade_id = entities.get('grade_id')
+        if not target_grade_id:
+            if any(w in norm_query for w in ['ثالث ثانوي', 'ثالث ثنوي', '12', 'ثاني عشر']):
+                target_grade_id = 'GRADE_12'
+            elif any(w in norm_query for w in ['ثاني ثانوي', 'ثاني ثنوي', '11', 'حادي عشر']):
+                target_grade_id = 'GRADE_11'
+            elif any(w in norm_query for w in ['اول ثانوي', 'اول ثنوي', '10', 'عاشر']):
+                target_grade_id = 'GRADE_10'
+            elif any(w in norm_query for w in ['تاسع', '9']):
+                target_grade_id = 'GRADE_9'
+            elif any(w in norm_query for w in ['ثامن', '8']):
+                target_grade_id = 'GRADE_8'
+            elif any(w in norm_query for w in ['سابع', '7']):
+                target_grade_id = 'GRADE_7'
+            elif any(w in norm_query for w in ['سادس', '6']):
+                target_grade_id = 'GRADE_6'
+            elif any(w in norm_query for w in ['خامس', '5']):
+                target_grade_id = 'GRADE_5'
+            elif any(w in norm_query for w in ['رابع', '4']):
+                target_grade_id = 'GRADE_4'
+            elif any(w in norm_query for w in ['ثالث', '3']):
+                target_grade_id = 'GRADE_3'
+            elif any(w in norm_query for w in ['ثاني', '2']):
+                target_grade_id = 'GRADE_2'
+            elif any(w in norm_query for w in ['اول', '1']):
+                target_grade_id = 'GRADE_1'
+                
         target_subject = entities.get('subject')
 
         # 1. إذا سأل عن صف معين (مثل الصف العاشر أو الثالث ثانوي)
@@ -857,7 +901,7 @@ class InferenceEngine:
         for d in docs:
             lines.append(f"• {d}")
 
-        lines.append("\n💡 لمزيد من التفاصيل، يرجى مراجعة قسم شؤون الطلاب أو الاتصال على الرقم: `+967-1-234568`.")
+        lines.append("\n💡 لمزيد من التفاصيل، يرجى مراجعة قسم شؤون الطلاب أو الاتصال على الرقم: `778532787`.")
         return QueryResult(response="\n".join(lines), sources_used=['admission_registration_rules.json'], confidence=0.95)
 
     def _handle_facilities(self, norm_query: str, entities: Dict[str, Any]) -> Optional[QueryResult]:
