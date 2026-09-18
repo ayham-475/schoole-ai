@@ -501,8 +501,9 @@ class InferenceEngine:
                 if teacher_name and (teacher_name in t.get('clean_name', '') or t.get('clean_name', '') in teacher_name):
                     target_teacher = t
                     break
-                for kw in t.get('search_keywords', []):
-                    if kw in norm_query:
+                keywords_to_check = t.get('search_keywords', []) + t.get('aliases', [])
+                for kw in keywords_to_check:
+                    if kw and kw in norm_query:
                         target_teacher = t
                         break
                 if target_teacher:
@@ -512,7 +513,8 @@ class InferenceEngine:
         if not target_teacher:
             subject = entities.get('subject', '')
             for t in teachers:
-                for s in t.get('subjects_taught', []):
+                subj_list = t.get('subjects_taught', t.get('taught_subjects', []))
+                for s in subj_list:
                     if subject and (subject in s or s in subject):
                         target_teacher = t
                         break
@@ -533,14 +535,18 @@ class InferenceEngine:
                 hours_lines.append(f"  • يوم {day_ar}: من {h.get('start_time')} إلى {h.get('end_time')} (📍 {h.get('location_name')})")
 
             hours_str = "\n".join(hours_lines) if hours_lines else "  • بالتنسيق المسبق مع إدارة القسم."
+            
+            subj_list = target_teacher.get('subjects_taught', target_teacher.get('taught_subjects', []))
+            spec = target_teacher.get('specialization') or "معلم عام"
+            email = target_teacher.get('contact', {}).get('email', 'غير متوفر')
 
             res = (
                 f"👨‍🏫 **بيانات المعلم:**\n\n"
-                f"• **الاسم:** {target_teacher.get('title')} {target_teacher.get('clean_name')}\n"
+                f"• **الاسم:** {target_teacher.get('title', 'أ.')} {target_teacher.get('clean_name', '')}\n"
                 f"• **القسم الأكاديمي:** {dep_name}\n"
-                f"• **التخصص:** {target_teacher.get('specialization')}\n"
-                f"• **المواد التي يدرسها:** {', '.join(target_teacher.get('subjects_taught', []))}\n"
-                f"• **البريد الإلكتروني:** `{target_teacher.get('contact', {}).get('email', '')}`\n\n"
+                f"• **التخصص:** {spec}\n"
+                f"• **المواد التي يدرسها:** {', '.join(subj_list) if subj_list else 'غير محدد'}\n"
+                f"• **البريد الإلكتروني:** `{email}`\n\n"
                 f"⏰ **الساعات المكتبية والاستقبال:**\n{hours_str}"
             )
             return QueryResult(response=res, sources_used=['teachers_departments.json'], confidence=0.94)
@@ -958,3 +964,67 @@ class InferenceEngine:
             f"• 🏥 *\"أين تقع العيادة الطبية وما هي مواعيدها؟\"*\n"
             f"• 📝 *\"شروط القبول والتسجيل\"* أو *\"رقم التواصل وموقع المدرسة\"*"
         )
+
+    # ---------------------------------------------------------
+    # خوارزمية التحسين (Greedy Set Cover Algorithm)
+    # ---------------------------------------------------------
+    def run_greedy_set_cover(self, requested_subjects: List[str]) -> Dict[str, Any]:
+        """
+        تطبيق الخوارزمية الجشعة (Greedy Best-First Search) 
+        لإيجاد الحد الأدنى من المعلمين لتغطية مجموعة من المواد.
+        """
+        td_data = self.kb_data.get('teachers_departments.json', {})
+        teachers = td_data.get('teachers', [])
+        
+        # تجهيز بيانات المعلمين والمواد التي يدرسونها
+        teacher_pool = []
+        for t in teachers:
+            subj_list = t.get('subjects_taught', t.get('taught_subjects', []))
+            if subj_list:
+                teacher_pool.append({
+                    'name': t.get('clean_name'),
+                    'title': t.get('title'),
+                    'subjects': set(subj_list)
+                })
+
+        uncovered_subjects = set(requested_subjects)
+        selected_teachers = []
+        logs = []
+        step = 1
+
+        logs.append(f"🎯 **الهدف:** تغطية المواد التالية: {', '.join(uncovered_subjects)}")
+
+        while uncovered_subjects:
+            best_teacher = None
+            best_cover = set()
+
+            # القرار الجشع (Greedy Choice)
+            for teacher in teacher_pool:
+                covered = teacher['subjects'].intersection(uncovered_subjects)
+                if len(covered) > len(best_cover):
+                    best_teacher = teacher
+                    best_cover = covered
+
+            if not best_teacher:
+                logs.append(f"⚠️ **فشل:** لا يوجد معلمون إضافيون لتغطية المواد المتبقية: {', '.join(uncovered_subjects)}")
+                break
+
+            selected_teachers.append({
+                'name': f"{best_teacher['title']} {best_teacher['name']}",
+                'covered_subjects': list(best_cover)
+            })
+            uncovered_subjects -= best_cover
+            
+            logs.append(f"✅ **الخطوة {step}:** تم اختيار **{best_teacher['name']}** لتغطية ({', '.join(best_cover)}).")
+            if uncovered_subjects:
+                logs.append(f"   المواد المتبقية: {', '.join(uncovered_subjects)}")
+            else:
+                logs.append(f"🎉 **النتيجة:** تم تغطية جميع المواد بنجاح!")
+            step += 1
+
+        return {
+            'selected_teachers': selected_teachers,
+            'logs': logs,
+            'success': len(uncovered_subjects) == 0,
+            'missing_subjects': list(uncovered_subjects)
+        }

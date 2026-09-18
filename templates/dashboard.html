@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم | مدرسة النجاح باليعر</title>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --primary: #3b82f6;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+        }
+
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .header a {
+            color: white;
+            text-decoration: none;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .header a:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .kpi-card {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .kpi-title {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .kpi-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+        
+        .kpi-value.success { color: var(--success); }
+        .kpi-value.warning { color: var(--warning); }
+
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+        }
+
+        .chart-card {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        .chart-card h3 {
+            margin-top: 0;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        /* Loading */
+        #loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>📊 لوحة الإحصائيات الذكية | الإدارة</h1>
+        <a href="/">💬 العودة للمحادثة</a>
+    </div>
+
+    <div class="container">
+        <div id="loading">جاري جلب البيانات من الخادم... ⏳</div>
+        
+        <div id="dashboardContent" style="display: none;">
+            
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-title">إجمالي المحادثات</div>
+                    <div class="kpi-value" id="kpi-total">0</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">محادثات اليوم</div>
+                    <div class="kpi-value" id="kpi-today">0</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">نسبة رضا المستخدمين</div>
+                    <div class="kpi-value success" id="kpi-satisfaction">0%</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">متوسط سرعة الرد</div>
+                    <div class="kpi-value warning" id="kpi-speed">0 ms</div>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3>🔍 أكثر المواضيع استفساراً (النوايا)</h3>
+                    <div class="chart-container">
+                        <canvas id="intentsChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <h3>👍 تقييمات جودة الإجابات</h3>
+                    <div class="chart-container">
+                        <canvas id="feedbackChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- أداة التوزيع الذكي (Greedy Algorithm) -->
+            <div class="chart-card" style="margin-top: 20px;">
+                <h3>🧠 أداة التوزيع الذكي للمعلمين (الخوارزمية الجشعة - Set Cover)</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">
+                    اختر المواد التي تحتاج لتغطيتها، وسيقوم الذكاء الاصطناعي بحساب أقل عدد ممكن من المعلمين المطلوبين لتغطية هذه المواد.
+                </p>
+                <div style="margin-top: 15px;">
+                    <label><input type="checkbox" class="subject-cb" value="الرياضيات"> الرياضيات</label>
+                    <label><input type="checkbox" class="subject-cb" value="الفيزياء"> الفيزياء</label>
+                    <label><input type="checkbox" class="subject-cb" value="الكيمياء"> الكيمياء</label>
+                    <label><input type="checkbox" class="subject-cb" value="الأحياء"> الأحياء</label>
+                    <label><input type="checkbox" class="subject-cb" value="اللغة العربية"> اللغة العربية</label>
+                    <label><input type="checkbox" class="subject-cb" value="اللغة الإنجليزية"> اللغة الإنجليزية</label>
+                    <label><input type="checkbox" class="subject-cb" value="التربية الإسلامية"> التربية الإسلامية</label>
+                    <label><input type="checkbox" class="subject-cb" value="الحاسب الآلي والذكاء الاصطناعي"> الحاسب والذكاء الاصطناعي</label>
+                    <button onclick="runOptimization()" style="margin-right: 15px; padding: 8px 16px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer;">احسب التغطية</button>
+                </div>
+                <div id="optimization-result" style="margin-top: 20px; padding: 15px; background: #f1f5f9; border-radius: 8px; display: none;">
+                    <h4>نتائج خوارزمية البحث:</h4>
+                    <pre id="optimization-logs" style="white-space: pre-wrap; font-family: inherit; font-size: 0.95rem;"></pre>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        async function runOptimization() {
+            const checkboxes = document.querySelectorAll('.subject-cb:checked');
+            const subjects = Array.from(checkboxes).map(cb => cb.value);
+            
+            if(subjects.length === 0) {
+                alert("يرجى اختيار مادة واحدة على الأقل.");
+                return;
+            }
+
+            const resultDiv = document.getElementById('optimization-result');
+            const logsPre = document.getElementById('optimization-logs');
+            resultDiv.style.display = 'block';
+            logsPre.textContent = "جاري معالجة الخوارزمية الجشعة... ⏳";
+
+            try {
+                const response = await fetch('/api/optimize/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ subjects: subjects })
+                });
+                const data = await response.json();
+                
+                if (data.error) {
+                    logsPre.textContent = "❌ خطأ: " + data.error;
+                    return;
+                }
+
+                logsPre.innerHTML = data.logs.join('<br><br>');
+            } catch (error) {
+                logsPre.textContent = "❌ حدث خطأ في الاتصال بالخادم.";
+            }
+        }
+        async function fetchStats() {
+            try {
+                const response = await fetch('/api/stats/');
+                const data = await response.json();
+                
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('dashboardContent').style.display = 'block';
+
+                // Update KPIs
+                document.getElementById('kpi-total').textContent = data.total_chats;
+                document.getElementById('kpi-today').textContent = data.today_chats;
+                document.getElementById('kpi-satisfaction').textContent = data.satisfaction_rate + '%';
+                document.getElementById('kpi-speed').textContent = data.avg_response_time_ms + ' ms';
+
+                // Render Intents Chart (Bar)
+                const intentLabels = data.top_intents.map(i => translateIntent(i.intent_detected));
+                const intentData = data.top_intents.map(i => i.count);
+                
+                new Chart(document.getElementById('intentsChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: intentLabels,
+                        datasets: [{
+                            label: 'عدد الأسئلة',
+                            data: intentData,
+                            backgroundColor: 'rgba(59, 130, 246, 0.6)',
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            borderWidth: 1,
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
+
+                // Render Feedback Chart (Doughnut)
+                const positive = data.positive_feedback;
+                const negative = data.total_feedback - positive;
+                
+                new Chart(document.getElementById('feedbackChart'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['مفيدة 👍', 'غير مفيدة 👎'],
+                        datasets: [{
+                            data: [positive, negative],
+                            backgroundColor: ['#10b981', '#ef4444'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '70%',
+                        plugins: {
+                            legend: { position: 'bottom' }
+                        }
+                    }
+                });
+
+            } catch (error) {
+                document.getElementById('loading').textContent = '❌ حدث خطأ أثناء جلب البيانات.';
+                console.error(error);
+            }
+        }
+
+        // قاموس ترجمة النوايا لأسماء مفهومة للمدير
+        function translateIntent(intent) {
+            const dictionary = {
+                'query_schedule': 'جدول الحصص',
+                'query_teacher': 'المعلمين',
+                'query_curriculum': 'المناهج',
+                'query_exams': 'الاختبارات',
+                'fallback_unknown': 'أسئلة غير معروفة',
+                'universal_search': 'بحث في الأسئلة الشائعة'
+            };
+            return dictionary[intent] || intent;
+        }
+
+        // تحميل الإحصائيات عند فتح الصفحة
+        window.onload = fetchStats;
+    </script>
+</body>
+</html>
